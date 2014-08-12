@@ -1,0 +1,44 @@
+//
+// Prefix header for all source files of the 'AKTabBar Example' target in the 'AKTabBar Example' project
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_5_0
+#warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+#import "MBProgressHUD.h"
+#import "Utils.h"
+#import "AppDelegate.h"
+#import "MJRefresh.h"
+#import "UIImageView+WebCache.h"
+#import "Reachability.h"
+#import "IDMPhoto.h"
+#import "IDMPhotoBrowser.h"
+#endif
+
+#define HOST_IP @"223.4.180.21"
+#define TeaHome_HOST @"http://www.haorenao.cn"
+#define CMD_URL @"http://www.haorenao.cn:8080/cmd/?cmd="
+//#define CMD_URL @"http://223.4.180.21:8080/cmd/?cmd="
+#define upload_image_to_server_url @"http://www.haorenao.cn:8080/save_file/"
+
+#define shop_image_root_url @"http://www.haorenao.cn/static/shopimages/"
+#define product_image_root_url @"http://www.haorenao.cn/static/shopimages/item/"
+#define promotion_image_root_url @"http://www.haorenao.cn/static/shopimages/promotion/"
+#define upload_image_root_url @"http://www.haorenao.cn/static/tea/threadimages/"
+
+
+//分享
+#define share_root_url @"http://www.haorenao.cn:8080/"
+#define share_sdk_app_key @"22f40a19cad6"
+//新浪微博
+#define sina_app_secret @"e88a0d9c25fca77c531dcf4ea8b5bd05"
+#define sina_app_key @"496390252"
+
+//微信
+#define wechat_app_id @""
