@@ -229,10 +229,10 @@
         str = [str stringByAppendingString:itemsStr];
         
         NSString *nameStr = [Utils fetchDataFromUserDefaults:NameSetting];
-        str = [str stringByAppendingFormat:@"&contact=%@",nameStr];
+        str = [str stringByAppendingFormat:@"&contact=%@",[Utils getHtmlStringFromString:nameStr]];
         
         NSString *addrStr = [Utils fetchDataFromUserDefaults:AddrSetting];
-        str = [str stringByAppendingFormat:@"&addr=%@",addrStr];
+        str = [str stringByAppendingFormat:@"&addr=%@",[Utils getHtmlStringFromString:addrStr]];
         
         NSString *phoneStr = [Utils fetchDataFromUserDefaults:PhoneSetting];
         str = [str stringByAppendingFormat:@"&phone=%@",phoneStr];
