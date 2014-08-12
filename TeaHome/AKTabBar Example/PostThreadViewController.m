@@ -118,7 +118,6 @@
 //    [self saveImage:image WithName:@"test.png"];
 //    [self upLoadImageToServer:@"test.png"];
 //    return;
-    //TODO
     UIView *chooseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 120, 81)];
     
     UIButton *album = [UIButton buttonWithType:UIButtonTypeCustom];
