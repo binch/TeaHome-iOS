@@ -20,7 +20,7 @@ typedef NS_ENUM(int, kPostStyle) {
 #define kPostThreadSuccessNotification @"kPostThreadSuccessNotification"
 #define kPostQuestionSuccessNotification @"kPostQuestionSuccessNotification"
 
-@interface PostThreadViewController : UIViewController<UIAlertViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,SNPopupViewModalDelegate,NSURLConnectionDataDelegate>
+@interface PostThreadViewController : UIViewController<UIAlertViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,NSURLConnectionDataDelegate>
 
 @property(nonatomic,assign) kPostStyle style;
 

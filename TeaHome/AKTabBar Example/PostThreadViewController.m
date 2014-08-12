@@ -20,6 +20,7 @@
 
 @interface PostThreadViewController ()
 
+@property(nonatomic,strong) MBProgressHUD *postHUD;
 @property(nonatomic,strong) UIImagePickerController *imagePicker;
 @property(nonatomic,strong) SNPopupView *popview;
 
@@ -85,6 +86,15 @@
         self.contentView.text = [NSString stringWithFormat:@"@%@ ",self.nickname];
     }
     
+    self.postHUD = [[MBProgressHUD alloc] initWithView:self.view];
+    self.postHUD.labelText = @"取消";
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelHUD:)];
+    [self.postHUD addGestureRecognizer:tap];
+    
+    [self.view addSubview:self.postHUD];
+    
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -104,6 +114,11 @@
 
 -(void)chooseImageAction:(UIBarButtonItem *)item
 {
+    UIImage *image = [UIImage imageNamed:@"test.jpg"];
+    [self saveImage:image WithName:@"test.png"];
+    [self upLoadImageToServer:@"test.png"];
+    return;
+    //TODO
     UIView *chooseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 120, 81)];
     
     UIButton *album = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -124,7 +139,6 @@
 
     
     self.popview = [[SNPopupView alloc] initWithContentView:chooseView contentSize:chooseView.bounds.size];
-    self.popview.delegate = self;
     CGPoint point = CGPointMake(self.addImageBtn.frame.origin.x + self.addImageBtn.frame.size.width/2, self.addImageBtn.frame.size.height + self.addImageBtn.frame.origin.y);
     [self.popview presentModalAtPoint:point inView:self.view];
 }
@@ -303,6 +317,11 @@
     
     self.hud = [[MBProgressHUD alloc] initWithView:self.view];
     self.hud.mode = MBProgressHUDModeDeterminateHorizontalBar;
+    self.hud.labelText = @"取消";
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelHUD:)];
+    [self.hud addGestureRecognizer:tap];
+    
     [self.view addSubview:self.hud];
     [self.hud show:YES];
     
@@ -384,6 +403,8 @@
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     NSLog(@"Connection failed: %@", error);
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [Utils showAlertViewWithMessage:[NSString stringWithFormat:@"%@",error]];
 }
 
 #pragma mark -- photo browser delegate method
@@ -403,14 +424,10 @@
     [self presentViewController:browser animated:YES completion:nil];
 }
 
-#pragma mark -- popup delegate method
--(void)didDismissModal:(SNPopupView *)popupview
-{
-    
-}
-
 -(void)postAction:(id)sender
 {
+    [self.titeLabel resignFirstResponder];
+    [self.contentView resignFirstResponder];
     switch (self.style) {
         case kPostStyleThread:
         {
@@ -460,6 +477,13 @@
     }
 }
 
+#pragma mark -- 点击hud取消
+-(void)cancelHUD:(UITapGestureRecognizer *)tap
+{
+    MBProgressHUD *ahud = (MBProgressHUD *)tap.view;
+    [ahud hide:YES];
+}
+
 //发布帖子
 -(void)postThread
 {
@@ -475,18 +499,32 @@
             }
         }
     }
-    id json = [Utils getJsonDataFromWeb:str];
-    if (json != nil) {
-        if ([[json objectForKey:@"ret"] isEqualToString:@"ok"]) {
-            [Utils showAlertViewWithMessage:@"发表帖子成功."];
-            [self.navigationController popViewControllerAnimated:YES];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kPostThreadSuccessNotification object:nil];
-        }else{
-            [Utils showAlertViewWithMessage:@"发表帖子失败."];
-        }
-    }else{
-        [Utils showAlertViewWithMessage:@"网络链接出错，请稍后再试."];
-    }
+    NSURL *url = [NSURL URLWithString:str];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    [self.postHUD show:YES];
+    [NSURLConnection sendAsynchronousRequest:request
+               queue:[NSOperationQueue mainQueue]
+   completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+       if ([[MBProgressHUD allHUDsForView:self.view] count] == 0) {
+           return ;
+       }
+       [self.postHUD hide:YES];
+       if (data != nil) {
+           NSError *error;
+           id json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+           if (json != nil) {
+               if ([[json objectForKey:@"ret"] isEqualToString:@"ok"]) {
+                   [Utils showAlertViewWithMessage:@"发表帖子成功."];
+                   [self.navigationController popViewControllerAnimated:YES];
+                   [[NSNotificationCenter defaultCenter] postNotificationName:kPostThreadSuccessNotification object:nil];
+               }else{
+                   [Utils showAlertViewWithMessage:@"发表帖子失败."];
+               }
+           }else{
+               [Utils showAlertViewWithMessage:@"网络链接出错，请稍后再试."];
+           }
+       }
+   }];
 }
 
 //回复帖子
@@ -503,38 +541,64 @@
             }
         }
     }
-    id json = [Utils getJsonDataFromWeb:str];
-    if (json != nil) {
-        if ([[json objectForKey:@"ret"] isEqualToString:@"ok"]) {
-            [Utils showAlertViewWithMessage:@"发表回复成功."];
-             [self.navigationController popViewControllerAnimated:YES];
-        }else{
-            [Utils showAlertViewWithMessage:@"发表回复失败."];
-        }
-    }else{
-        [Utils showAlertViewWithMessage:@"网络链接出错，请稍后再试."];
-    }
+    NSURL *url = [NSURL URLWithString:str];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    [self.postHUD show:YES];
+    [NSURLConnection sendAsynchronousRequest:request
+               queue:[NSOperationQueue mainQueue]
+   completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+       if ([[MBProgressHUD allHUDsForView:self.view] count] == 0) {
+           return ;
+       }
+       [self.postHUD hide:YES];
+       if (data != nil) {
+           NSError *error;
+           id json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+           if (json != nil) {
+               if ([[json objectForKey:@"ret"] isEqualToString:@"ok"]) {
+                   [Utils showAlertViewWithMessage:@"发表回复成功."];
+                   [self.navigationController popViewControllerAnimated:YES];
+               }else{
+                   [Utils showAlertViewWithMessage:@"发表回复失败."];
+               }
+           }else{
+               [Utils showAlertViewWithMessage:@"网络链接出错，请稍后再试."];
+           }
+       }
+   }];
 }
 
 -(void)postQuestion
 {
-    NSString *url = [NSString stringWithFormat:@"%@%@",CMD_URL,get_cats_cmd];
-    id json = [Utils getJsonDataFromWeb:url];
-    if (json != nil) {
-        self.questionCats = (NSArray *)json;
-        UIAlertView *alert = [[UIAlertView alloc] init];
-        [alert setTitle:@"选择问题分类"];
-        [alert setDelegate: self];
-        for (NSDictionary *dic in self.questionCats) {
-            [alert addButtonWithTitle:[dic objectForKey:@"name"]];
-        }
-        [alert addButtonWithTitle:@"取消"];
-        [alert show];
-    }else{
-        [Utils showAlertViewWithMessage:@"网络出错,请稍后再试."];
-    }
-    
-    
+    NSString *str = [NSString stringWithFormat:@"%@%@",CMD_URL,get_cats_cmd];
+    NSURL *url = [NSURL URLWithString:str];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    [self.postHUD show:YES];
+    [NSURLConnection sendAsynchronousRequest:request
+               queue:[NSOperationQueue mainQueue]
+   completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+       if ([[MBProgressHUD allHUDsForView:self.view] count] == 0) {
+           return ;
+       }
+       [self.postHUD hide:YES];
+       if (data != nil) {
+           NSError *error;
+           id json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+           if (json != nil) {
+               self.questionCats = (NSArray *)json;
+               UIAlertView *alert = [[UIAlertView alloc] init];
+               [alert setTitle:@"选择问题分类"];
+               [alert setDelegate: self];
+               for (NSDictionary *dic in self.questionCats) {
+                   [alert addButtonWithTitle:[dic objectForKey:@"name"]];
+               }
+               [alert addButtonWithTitle:@"取消"];
+               [alert show];
+           }else{
+               [Utils showAlertViewWithMessage:@"网络出错,请稍后再试."];
+           }
+       }
+   }];
 }
 
 //发布问题
@@ -555,18 +619,32 @@
             }
         }
     }
-    id json = [Utils getJsonDataFromWeb:str];
-    if (json != nil) {
-        if ([[json objectForKey:@"ret"] isEqualToString:@"ok"]) {
-            [Utils showAlertViewWithMessage:@"发表问题成功."];
-            [self.navigationController popViewControllerAnimated:YES];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kPostQuestionSuccessNotification object:nil];
-        }else{
-            [Utils showAlertViewWithMessage:@"发表问题失败."];
-        }
-    }else{
-        [Utils showAlertViewWithMessage:@"网络链接出错，请稍后再试."];
-    }
+    NSURL *url = [NSURL URLWithString:str];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    [self.postHUD show:YES];
+    [NSURLConnection sendAsynchronousRequest:request
+               queue:[NSOperationQueue mainQueue]
+   completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+       if ([[MBProgressHUD allHUDsForView:self.view] count] == 0) {
+           return ;
+       }
+       [self.postHUD hide:YES];
+       if (data != nil) {
+           NSError *error;
+           id json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+           if (json != nil) {
+               if ([[json objectForKey:@"ret"] isEqualToString:@"ok"]) {
+                   [Utils showAlertViewWithMessage:@"发表问题成功."];
+                   [self.navigationController popViewControllerAnimated:YES];
+                   [[NSNotificationCenter defaultCenter] postNotificationName:kPostQuestionSuccessNotification object:nil];
+               }else{
+                   [Utils showAlertViewWithMessage:@"发表问题失败."];
+               }
+           }else{
+               [Utils showAlertViewWithMessage:@"网络链接出错，请稍后再试."];
+           }
+       }
+   }];
 }
 
 //回复问答
@@ -583,17 +661,31 @@
             }
         }
     }
-    id json = [Utils getJsonDataFromWeb:str];
-    if (json != nil) {
-        if ([[json objectForKey:@"ret"] isEqualToString:@"ok"]) {
-            [Utils showAlertViewWithMessage:@"发表答案成功."];
-            [self.navigationController popViewControllerAnimated:YES];
-        }else{
-            [Utils showAlertViewWithMessage:@"发表答案失败."];
-        }
-    }else{
-        [Utils showAlertViewWithMessage:@"网络链接出错，请稍后再试."];
-    }
+    NSURL *url = [NSURL URLWithString:str];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    [self.postHUD show:YES];
+    [NSURLConnection sendAsynchronousRequest:request
+               queue:[NSOperationQueue mainQueue]
+   completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+       if ([[MBProgressHUD allHUDsForView:self.view] count] == 0) {
+           return ;
+       }
+       [self.postHUD hide:YES];
+       if (data != nil) {
+           NSError *error;
+           id json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+           if (json != nil) {
+               if ([[json objectForKey:@"ret"] isEqualToString:@"ok"]) {
+                   [Utils showAlertViewWithMessage:@"发表答案成功."];
+                   [self.navigationController popViewControllerAnimated:YES];
+               }else{
+                   [Utils showAlertViewWithMessage:@"发表答案失败."];
+               }
+           }else{
+               [Utils showAlertViewWithMessage:@"网络链接出错，请稍后再试."];
+           }
+       }
+   }];
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event

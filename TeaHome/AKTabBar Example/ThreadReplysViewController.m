@@ -85,14 +85,14 @@ static CGFloat ImageViewHeight = 80;
     if (self.thread) {
         self.tid = [[self.thread objectForKey:@"id"] intValue];
     }
-    //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSString *urlStr = [NSString stringWithFormat:@"%@%@&thread=%d&username=%@",CMD_URL,update_comment_cmd,self.tid,TeaHomeAppDelegate.username];
     NSURL *url = [NSURL URLWithString:urlStr];
     NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
     [NSURLConnection sendAsynchronousRequest:request
                queue:[NSOperationQueue mainQueue]
    completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-       //                               [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+       [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
        if (data != nil) {
            NSError *error;
            id jsonObj = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
