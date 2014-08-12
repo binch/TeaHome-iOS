@@ -1681,7 +1681,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "75a70f81-0f59-45f8-bd19-eb39b08777f5";
+				PROVISIONING_PROFILE = "7ac5ff01-3e8f-42b1-8dda-663afd539556";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1711,7 +1711,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "75a70f81-0f59-45f8-bd19-eb39b08777f5";
+				PROVISIONING_PROFILE = "7ac5ff01-3e8f-42b1-8dda-663afd539556";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1724,8 +1724,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Bin Chen (TPCJ534SQ6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Bin Chen (TPCJ534SQ6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/AKTabBar\\ Example/UI/Common/ShareSDK/Connection",
@@ -1743,7 +1743,7 @@
 					"$(SRCROOT)/AKTabBar\\ Example/UI/Common/ShareSDK/Extend/SinaWeiboSDK",
 				);
 				PRODUCT_NAME = "茶友之家";
-				PROVISIONING_PROFILE = "75a70f81-0f59-45f8-bd19-eb39b08777f5";
+				PROVISIONING_PROFILE = "7ac5ff01-3e8f-42b1-8dda-663afd539556";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
@@ -1756,8 +1756,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Bin Chen (TPCJ534SQ6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Bin Chen (TPCJ534SQ6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/AKTabBar\\ Example/UI/Common/ShareSDK/Connection",
@@ -1775,7 +1775,7 @@
 					"$(SRCROOT)/AKTabBar\\ Example/UI/Common/ShareSDK/Extend/SinaWeiboSDK",
 				);
 				PRODUCT_NAME = "茶友之家";
-				PROVISIONING_PROFILE = "75a70f81-0f59-45f8-bd19-eb39b08777f5";
+				PROVISIONING_PROFILE = "7ac5ff01-3e8f-42b1-8dda-663afd539556";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
