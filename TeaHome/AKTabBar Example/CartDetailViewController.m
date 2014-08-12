@@ -257,9 +257,6 @@
         [NSURLConnection sendAsynchronousRequest:request
                    queue:[NSOperationQueue mainQueue]
        completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-           if ([[MBProgressHUD allHUDsForView:self.view] count] == 0) {
-               return ;
-           }
            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
            if (data != nil) {
                NSError *error;
