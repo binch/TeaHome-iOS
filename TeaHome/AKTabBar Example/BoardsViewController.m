@@ -106,7 +106,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 156;
+    return 106;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -132,7 +132,7 @@
     titleLabel.textColor = [UIColor whiteColor];
     [cell addSubview:titleLabel];
 
-    UIView *holderView = [[UIView alloc] initWithFrame:CGRectMake(titleLabel.frame.origin.x, titleLabel.frame.origin.y + titleLabel.frame.size.height, contentImage.size.width, contentImage.size.height)];
+    UIView *holderView = [[UIView alloc] initWithFrame:CGRectMake(titleLabel.frame.origin.x, titleLabel.frame.origin.y + titleLabel.frame.size.height, contentImage.size.width, 50)];
     holderView.backgroundColor = [UIColor colorWithPatternImage:contentImage];
     [cell addSubview:holderView];
     
@@ -146,24 +146,29 @@
     
     NSMutableAttributedString *asString = [[NSMutableAttributedString alloc] initWithString:@""];
     NSAttributedString *totalString = [[NSAttributedString alloc] initWithString:
-                                       [NSString stringWithFormat:@"共有%d条帖子(",total] attributes:
+                                       [NSString stringWithFormat:@"共有%d条帖子",total] attributes:
                                        [NSDictionary dictionaryWithObjectsAndKeys:
                                         [UIColor lightGrayColor],NSForegroundColorAttributeName,nil]];
     [asString appendAttributedString:totalString];
     
-    NSAttributedString *unreadString = [[NSAttributedString alloc] initWithString:
-                                        [NSString stringWithFormat:@"%d条新帖子",notread] attributes:
+    if (notread > 0) {
+        NSAttributedString *unreadString = [[NSAttributedString alloc] initWithString:
+                                        [NSString stringWithFormat:@"(%d条新帖子",notread] attributes:
                                         [NSDictionary dictionaryWithObjectsAndKeys:
                                          [Utils hexStringToColor:navigation_bar_color],NSForegroundColorAttributeName,nil]];
-    [asString appendAttributedString:unreadString];
-    [asString appendAttributedString:[[NSAttributedString alloc] initWithString:@")" attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor lightGrayColor],NSForegroundColorAttributeName, nil]]];
+        [asString appendAttributedString:unreadString];
+    
+        [asString appendAttributedString:[[NSAttributedString alloc] initWithString:@")" attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor lightGrayColor],NSForegroundColorAttributeName, nil]]];
+    }
     
     UILabel *unreadLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, holderView.bounds.size.height - 20, holderView.frame.size.width - 30, 20)];
     unreadLabel.numberOfLines = 0;
     unreadLabel.textAlignment = NSTextAlignmentRight;
     unreadLabel.font = [UIFont systemFontOfSize:12];
     unreadLabel.attributedText = asString;
+    
     [holderView addSubview:unreadLabel];
+    
     return cell;
 }
 
