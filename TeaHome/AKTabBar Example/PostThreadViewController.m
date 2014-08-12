@@ -119,7 +119,7 @@
 //    [self upLoadImageToServer:@"test.png"];
 //    return;
     //TODO
-    UIView *chooseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 120, 81)];
+    UIView *chooseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 120, 81)];
     
     UIButton *album = [UIButton buttonWithType:UIButtonTypeCustom];
     album.frame = CGRectMake(0, 0, 100, 40);
