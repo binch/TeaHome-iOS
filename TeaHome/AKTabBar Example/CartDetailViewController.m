@@ -251,21 +251,35 @@
             
         }
         
-        id json = [Utils getJsonDataFromWeb:str];
-        if (json != nil) {
-            NSDictionary *result = (NSDictionary *)json;
-            if ([[result objectForKey:@"ret"] isEqualToString:@"ok"]) {
-                [Utils showAlertViewWithMessage:@"成功创建订单."];
-                [TeaHomeAppDelegate.cartsDic removeAllObjects];//删除购物车中的东西
-                
-                int orderId = [[result objectForKey:@"id"] intValue];
-                OrderDetailViewController *ovc = [[OrderDetailViewController alloc] init];
-                ovc.orderId = orderId;
-                [self.navigationController pushViewController:ovc animated:YES];
-            }
-        }else{
-            [Utils showAlertViewWithMessage:@"网络连接出错,请稍后再试."];
-        }
+        NSURL *url = [NSURL URLWithString:str];
+        NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [NSURLConnection sendAsynchronousRequest:request
+                   queue:[NSOperationQueue mainQueue]
+       completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+           if ([[MBProgressHUD allHUDsForView:self.view] count] == 0) {
+               return ;
+           }
+           [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+           if (data != nil) {
+               NSError *error;
+               id json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+               if (json != nil) {
+                   NSDictionary *result = (NSDictionary *)json;
+                   if ([[result objectForKey:@"ret"] isEqualToString:@"ok"]) {
+                       [Utils showAlertViewWithMessage:@"成功创建订单."];
+                       [TeaHomeAppDelegate.cartsDic removeAllObjects];//删除购物车中的东西
+                       
+                       int orderId = [[result objectForKey:@"id"] intValue];
+                       OrderDetailViewController *ovc = [[OrderDetailViewController alloc] init];
+                       ovc.orderId = orderId;
+                       [self.navigationController pushViewController:ovc animated:YES];
+                   }
+               }else{
+                   [Utils showAlertViewWithMessage:@"网络连接出错,请稍后再试."];
+               }
+           }
+       }];
     }
 }
 
