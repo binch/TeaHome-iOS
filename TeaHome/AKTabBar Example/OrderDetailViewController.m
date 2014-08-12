@@ -85,7 +85,7 @@
         self.navigationItem.rightBarButtonItem = payItem;
     }
     
-    NSString *orderno = @"123123123123";
+    NSString *orderno = [self.order objectForKey:@"id"];;
     NSString *status = nil;
     if ([[self.order objectForKey:@"status"] isEqualToString:order_status_new]) {
         status = @"新建";
@@ -126,7 +126,7 @@
     UILabel *orderNoLabel = [[UILabel alloc] initWithFrame:CGRectMake( x*2 +leftTitleLabelWidth,y, holderWidth - 3*x - leftTitleLabelWidth, labelHeight)];
     orderNoLabel.font = [UIFont systemFontOfSize:12];
     orderNoLabel.textColor = [UIColor lightGrayColor];
-    orderNoLabel.text = [NSString stringWithFormat:@"%@",orderno];
+    orderNoLabel.text = [NSString stringWithFormat:@"5917368 %@",orderno];
     [holderView addSubview:orderNoLabel];
     
     y += labelHeight;
@@ -287,7 +287,7 @@
         int count = [[product objectForKey:@"count"] intValue];
         NSString *title = [product objectForKey:@"title"];
         int pid = [[product objectForKey:@"id"] intValue];
-        float price = 12;//TODO [[product objectForKey:@"price"] floatValue];
+        float price = [[product objectForKey:@"price"] floatValue];
         
         //        UIView *itemView = [[UIView alloc] initWithFrame:CGRectMake(x, y, holderWidth - 2*x, leftTitleLabelWidth)];
         //        itemView.backgroundColor = [UIColor clearColor];

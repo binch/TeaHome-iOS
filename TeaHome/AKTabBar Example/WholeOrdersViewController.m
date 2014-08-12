@@ -96,7 +96,7 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     NSDictionary *order = [self.orders objectAtIndex:indexPath.row];
-    NSString *orderno = @"123123123123";//TODO
+    NSString *orderno = [order objectForKey:@"id"];
     NSString *status = nil;
     if ([[order objectForKey:@"status"] isEqualToString:order_status_new]) {
         status = @"新建";
@@ -141,7 +141,7 @@
     UILabel *orderNoLabel = [[UILabel alloc] initWithFrame:CGRectMake( x*2 +leftTitleLabelWidth,y, holderWidth - 3*x - leftTitleLabelWidth, labelHeight)];
     orderNoLabel.font = [UIFont systemFontOfSize:12];
     orderNoLabel.textColor = [UIColor lightGrayColor];
-    orderNoLabel.text = [NSString stringWithFormat:@"%@",orderno];
+    orderNoLabel.text = [NSString stringWithFormat:@"5917368 %@",orderno];
     [holderView addSubview:orderNoLabel];
     
     y += labelHeight;
