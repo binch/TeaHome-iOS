@@ -619,7 +619,7 @@ static int page = 1;
     
     cell.descLabel.text = desc;
     
-    cell.recommendLabel.text = [NSString stringWithFormat:@"%d 人推荐该店",recommend];
+    //cell.recommendLabel.text = [NSString stringWithFormat:@"%d 人推荐该店",recommend];
    
     return cell;
 }

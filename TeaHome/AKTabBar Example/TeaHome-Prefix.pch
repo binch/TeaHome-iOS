@@ -22,7 +22,7 @@
 #endif
 
 #define HOST_IP @"223.4.180.21"
-#define TeaHome_HOST @"http://www.haorenao.cn"
+#define TeaHome_HOST @"http://223.4.180.21"
 #define CMD_URL @"http://www.haorenao.cn:8080/cmd/?cmd="
 //#define CMD_URL @"http://223.4.180.21:8080/cmd/?cmd="
 #define upload_image_to_server_url @"http://www.haorenao.cn:8080/save_file/"

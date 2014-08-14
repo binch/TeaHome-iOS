@@ -270,7 +270,9 @@
     
     [cell.imageView sd_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"image_loading"]];
     cell.titleLabel.text = title;
-    cell.soldLabel.text = [NSString stringWithFormat:@"销量:%d",sold];
+    if (sold > 0) {
+        cell.soldLabel.text = [NSString stringWithFormat:@"折后:%d",sold];
+    }
     cell.priceLabel.text = [NSString stringWithFormat:@"价格:%.1f元",price];
     
     return cell;

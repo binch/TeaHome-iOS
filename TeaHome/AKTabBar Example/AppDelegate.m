@@ -57,12 +57,13 @@
     }
     
     //判断当前网络
-    BOOL isreach = [[Reachability reachabilityWithHostName:TeaHome_HOST] isReachable];
-    if (isreach) {
-        self.networkIsReachable = YES;
-    }else{
-        self.networkIsReachable = NO;
-    }
+    //BOOL isreach = [[Reachability reachabilityWithHostName:TeaHome_HOST] isReachable];
+    //if (isreach) {
+    //    self.networkIsReachable = YES;
+    //}else{
+    //    self.networkIsReachable = NO;
+    //}
+    self.networkIsReachable = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNetworkStatusChanged:) name:kReachabilityChangedNotification object:nil];
     [[Reachability reachabilityWithHostName:TeaHome_HOST] startNotifier];
     
@@ -179,6 +180,7 @@
     }else{
         self.networkIsReachable = NO;
     }
+    self.networkIsReachable = YES;
 }
 
 #pragma mark -- 设置tabbar下方的未读通知数

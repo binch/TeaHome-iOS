@@ -62,11 +62,11 @@
 
 -(void)getBoardsFormWeb
 {
-    if (TeaHomeAppDelegate.networkIsReachable == NO) {
-        [self.tableView headerEndRefreshing];
-        [Utils showAlertViewWithMessage:@"无网络,请稍后再试."];
-        return;
-    }
+//    if (TeaHomeAppDelegate.networkIsReachable == NO) {
+//        [self.tableView headerEndRefreshing];
+//        [Utils showAlertViewWithMessage:@"无网络,请稍后再试."];
+//        return;
+//    }
     //获取论坛板块
 //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
      NSString *urlStr = [NSString stringWithFormat:@"%@%@&username=%@",CMD_URL,get_boards_cmd,TeaHomeAppDelegate.username];

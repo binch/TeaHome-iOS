@@ -73,7 +73,7 @@
     categoryLabel.font = [UIFont systemFontOfSize:12];
     categoryLabel.textColor = [UIColor lightGrayColor];
     categoryLabel.text = @"[品种] : 乌龙茶";//TODO:
-    [holderView addSubview:categoryLabel];
+    //[holderView addSubview:categoryLabel];
     y += 15+5;
     
     UILabel *produceLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, 300-x, 15)];
@@ -82,18 +82,9 @@
     produceLabel.font = [UIFont systemFontOfSize:12];
     produceLabel.textColor = [UIColor lightGrayColor];
     produceLabel.text = @"[产地] : 台湾";//TODO:
-    [holderView addSubview:produceLabel];
+    //[holderView addSubview:produceLabel];
     y += 15+10;
-    
-    UILabel *soldLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, 300-x, 15)];
-    soldLabel.backgroundColor = [UIColor clearColor];
-    soldLabel.numberOfLines = 0;
-    soldLabel.textColor = [UIColor blackColor];
-    soldLabel.font = [UIFont systemFontOfSize:12];
-    soldLabel.text = [NSString stringWithFormat:@"销量: %d",sold];;
-    [holderView addSubview:soldLabel];
-    y += 20;
-    
+
     UILabel *priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, 300-x, 15)];
     priceLabel.backgroundColor = [UIColor clearColor];
     priceLabel.numberOfLines = 0;
@@ -101,7 +92,16 @@
     priceLabel.font = [UIFont systemFontOfSize:12];
     priceLabel.text = [NSString stringWithFormat:@"价格: %.1f元",price];
     [holderView addSubview:priceLabel];
-    y+= 25;
+    y+= 20;
+    
+    UILabel *soldLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, 300-x, 15)];
+    soldLabel.backgroundColor = [UIColor clearColor];
+    soldLabel.numberOfLines = 0;
+    soldLabel.textColor = [UIColor blackColor];
+    soldLabel.font = [UIFont systemFontOfSize:12];
+    soldLabel.text = [NSString stringWithFormat:@"折后: %d",sold];;
+    [holderView addSubview:soldLabel];
+    y += 25;
     
     UIImage *productCommentsImage = [UIImage imageNamed:@"product_comments"];
     UIButton *commentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
