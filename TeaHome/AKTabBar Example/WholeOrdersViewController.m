@@ -41,7 +41,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSString *urlStr = [NSString stringWithFormat:@"%@%@&username=%@",CMD_URL,get_user_orders_cmd,TeaHomeAppDelegate.username];
     NSURL *url = [NSURL URLWithString:urlStr];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     [NSURLConnection sendAsynchronousRequest:request
                queue:[NSOperationQueue mainQueue]
    completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {

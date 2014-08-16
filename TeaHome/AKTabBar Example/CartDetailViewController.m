@@ -35,6 +35,7 @@
 
     self.view.backgroundColor = [Utils hexStringToColor:view_back_color];
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.hidesBottomBarWhenPushed = YES;
     
     UIImage *submitImage = [UIImage imageNamed:@"bill_submit_button"];
     UIButton *submitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -252,7 +253,7 @@
         }
         
         NSURL *url = [NSURL URLWithString:str];
-        NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+        NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [NSURLConnection sendAsynchronousRequest:request
                    queue:[NSOperationQueue mainQueue]

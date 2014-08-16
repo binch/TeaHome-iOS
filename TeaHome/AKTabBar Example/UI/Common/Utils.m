@@ -12,7 +12,7 @@
 +(id)getJsonDataFromWeb:(NSString *)urlStr
 {
     NSURL *url = [NSURL URLWithString:urlStr];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
     if (data != nil) {
         NSError *error;

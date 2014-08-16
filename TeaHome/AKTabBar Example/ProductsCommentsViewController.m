@@ -51,7 +51,7 @@
     //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSString *urlStr = [NSString stringWithFormat:@"%@%@&item=%d",CMD_URL,get_item_comments_cmd,self.pid];
     NSURL *url = [NSURL URLWithString:urlStr];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     [NSURLConnection sendAsynchronousRequest:request
                queue:[NSOperationQueue mainQueue]
     completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {

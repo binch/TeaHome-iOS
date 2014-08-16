@@ -111,7 +111,7 @@ static int page = 1;
     }
     NSString *urlStr  = [NSString stringWithFormat:@"%@%@",CMD_URL,get_bigpictures_cmd];
     NSURL *url = [NSURL URLWithString:urlStr];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
@@ -138,7 +138,7 @@ static int page = 1;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSString *urlStr = [NSString stringWithFormat:@"%@%@&page=%d",CMD_URL,news_cmd,aPage];
     NSURL *url = [NSURL URLWithString:urlStr];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     [NSURLConnection sendAsynchronousRequest:request
                queue:[NSOperationQueue mainQueue]
    completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
@@ -179,6 +179,7 @@ static int page = 1;
                    }
                }
            }else{
+               [self.tableView headerEndRefreshing];
                dataErr = YES;
            }
     

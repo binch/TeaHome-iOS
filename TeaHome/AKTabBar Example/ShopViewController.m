@@ -35,6 +35,7 @@
 
     self.title = [self.shop objectForKey:@"title"];
     self.view.backgroundColor = [UIColor whiteColor];
+    self.hidesBottomBarWhenPushed = YES;
     
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
     self.searchBar.delegate = self;
@@ -73,7 +74,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSString *urlStr = [NSString stringWithFormat:@"%@%@&shop=%d",CMD_URL,get_shop_cats_cmd,shopId];
     NSURL *url = [NSURL URLWithString:urlStr];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     [NSURLConnection sendAsynchronousRequest:request
                queue:[NSOperationQueue mainQueue]
    completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
@@ -89,7 +90,7 @@
                    self.layout.minimumInteritemSpacing = 20;
                    self.layout.minimumLineSpacing = 10;
                    self.layout.sectionInset = UIEdgeInsetsMake(5, 5, 5, 5);
-                   self.layout.itemSize = CGSizeMake(90, 150);
+                   self.layout.itemSize = CGSizeMake(90, 170);
                    self.layout.headerReferenceSize = CGSizeMake(320, 20);
                    
                    self.catsView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:self.layout];
@@ -183,9 +184,9 @@
         for (NSDictionary *dic in self.searchResult) {
             NSArray *products = [dic objectForKey:@"items"];
             if ([products count] % 3 > 0) {
-                height += ([products count] / 3 + 1) * 160 + 30;
+                height += ([products count] / 3 + 1) * 180 + 30;
             }else{
-                height += [products count] / 3 * 160 + 30;
+                height += [products count] / 3 * 180 + 30;
             }
         }
         self.catsView.frame = CGRectMake(0, self.shopInfoView.bounds.size.height + 10, self.view.bounds.size.width,height);
@@ -270,10 +271,11 @@
     
     [cell.imageView sd_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"image_loading"]];
     cell.titleLabel.text = title;
+    [cell.titleLabel sizeToFit];
     if (sold > 0) {
         cell.soldLabel.text = [NSString stringWithFormat:@"折后:%d",sold];
     }
-    cell.priceLabel.text = [NSString stringWithFormat:@"价格:%.1f元",price];
+    cell.priceLabel.text = [NSString stringWithFormat:@"价格:￥%d",(int)(price)];
     
     return cell;
 }

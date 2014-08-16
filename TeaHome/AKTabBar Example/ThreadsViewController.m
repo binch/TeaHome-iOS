@@ -42,6 +42,7 @@ static int page = 1;
     self.title = self.name;
     
     self.tableView.backgroundColor = [UIColor whiteColor];
+    self.hidesBottomBarWhenPushed = YES;
     
     pullDownRefresh = YES;
     hasNewData = YES;
@@ -115,7 +116,7 @@ static int page = 1;
 //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSString *urlStr = [NSString stringWithFormat:@"%@%@&board=%d&username=%@&page=%d",CMD_URL,get_threads_cmd,self.bid,TeaHomeAppDelegate.username,pageNumber];
     NSURL *url = [NSURL URLWithString:urlStr];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:[NSOperationQueue mainQueue]
            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {

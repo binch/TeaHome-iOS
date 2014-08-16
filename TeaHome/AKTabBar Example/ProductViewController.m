@@ -35,6 +35,7 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.hidesBottomBarWhenPushed = YES;
     
     UIScrollView *holderView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 51 - 64)];
     [self.view addSubview:holderView];
@@ -97,10 +98,12 @@
     UILabel *soldLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, 300-x, 15)];
     soldLabel.backgroundColor = [UIColor clearColor];
     soldLabel.numberOfLines = 0;
-    soldLabel.textColor = [UIColor blackColor];
+    soldLabel.textColor = [UIColor redColor];
     soldLabel.font = [UIFont systemFontOfSize:12];
     soldLabel.text = [NSString stringWithFormat:@"折后: %d",sold];;
-    [holderView addSubview:soldLabel];
+    if (sold > 0) {
+        [holderView addSubview:soldLabel];
+    }
     y += 25;
     
     UIImage *productCommentsImage = [UIImage imageNamed:@"product_comments"];

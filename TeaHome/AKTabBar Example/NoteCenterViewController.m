@@ -66,7 +66,7 @@
     if (![TeaHomeAppDelegate.username isEqualToString:@""]) {
         NSString *urlStr = [NSString stringWithFormat:@"%@%@&username=%@",CMD_URL,get_user_atmessages_cmd,TeaHomeAppDelegate.username];
         NSURL *url = [NSURL URLWithString:urlStr];
-        NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+        NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
         [NSURLConnection sendAsynchronousRequest:request
                    queue:[NSOperationQueue mainQueue]
        completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
@@ -126,7 +126,7 @@
     
     NSString *text = [message objectForKey:@"text"];
     cell.textLabel.numberOfLines = 0;
-    cell.textLabel.font = [UIFont systemFontOfSize:13];
+    cell.textLabel.font = [UIFont systemFontOfSize:12];
     cell.textLabel.text = text;
     
     return cell;
@@ -159,7 +159,7 @@
     if (self.seg.selectedSegmentIndex == 0) {
         NSString *urlStr = [NSString stringWithFormat:@"%@%@&atmessage=%d&username=%@",CMD_URL,mark_read_atmessage_cmd,messageId,TeaHomeAppDelegate.username];
         NSURL *url = [NSURL URLWithString:urlStr];
-        NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+        NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
         [NSURLConnection sendAsynchronousRequest:request
                        queue:[NSOperationQueue mainQueue]
            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {

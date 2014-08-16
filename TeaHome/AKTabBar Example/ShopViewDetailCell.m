@@ -20,23 +20,23 @@
         [self.contentView addSubview:self.imageView];
         
         
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 90, self.bounds.size.width, 20)];
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 90, self.bounds.size.width, 40)];
         self.titleLabel.backgroundColor = [UIColor clearColor];
-        self.titleLabel.numberOfLines = 0;
-        self.titleLabel.font = [UIFont systemFontOfSize:12];
-        self.titleLabel.textColor = [UIColor blackColor];
+        self.titleLabel.numberOfLines = 3;
+        self.titleLabel.font = [UIFont systemFontOfSize:13];
+        self.titleLabel.textColor = [UIColor blueColor];
 //        self.titleLabel.text = title;
         [self.contentView addSubview:self.titleLabel];
  
-        self.priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 110, self.bounds.size.width, 20)];
+        self.priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 140, self.bounds.size.width, 20)];
         self.priceLabel.backgroundColor = [UIColor clearColor];
         self.priceLabel.numberOfLines = 0;
         self.priceLabel.font = [UIFont systemFontOfSize:12];
-        self.priceLabel.textColor = [UIColor blackColor];
+        self.priceLabel.textColor = [UIColor grayColor];
         //        priceLabel.text = [NSString stringWithFormat:@"价格:%.1f元",price];
         [self.contentView addSubview:self.priceLabel];
         
-        self.soldLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 130, self.bounds.size.width, 20)];
+        self.soldLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 160, self.bounds.size.width, 20)];
         self.soldLabel.backgroundColor = [UIColor clearColor];
         self.soldLabel.numberOfLines = 0;
         self.soldLabel.font = [UIFont systemFontOfSize:12];

@@ -195,7 +195,7 @@
 - (void)saveImage:(UIImage *)tempImage WithName:(NSString *)imageName
 {
     int fiftyK = 100 * 1024;
-    CGFloat width = 800;
+    CGFloat width = 440;
     if (UIImageJPEGRepresentation(tempImage, 1) != nil) {
         NSData *originData = UIImageJPEGRepresentation(tempImage, 1);
         if (originData.length > fiftyK) {
@@ -206,7 +206,7 @@
             }else if(tempImage.size.height > width){
                 image = [self imageWithImage:tempImage scaledToSize:CGSizeMake(tempImage.size.width * width / tempImage.size.height, width)];
             }
-            originData = UIImageJPEGRepresentation(image, 0.1);
+            originData = UIImageJPEGRepresentation(image, 0.5);
 //            CGFloat scale = 0.1;
 //            while (originData.length > fiftyK) {
 //                //无损保真压缩
@@ -499,7 +499,7 @@
         }
     }
     NSURL *url = [NSURL URLWithString:str];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     [self.postHUD show:YES];
     [NSURLConnection sendAsynchronousRequest:request
                queue:[NSOperationQueue mainQueue]
@@ -541,7 +541,7 @@
         }
     }
     NSURL *url = [NSURL URLWithString:str];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     [self.postHUD show:YES];
     [NSURLConnection sendAsynchronousRequest:request
                queue:[NSOperationQueue mainQueue]
@@ -571,7 +571,7 @@
 {
     NSString *str = [NSString stringWithFormat:@"%@%@",CMD_URL,get_cats_cmd];
     NSURL *url = [NSURL URLWithString:str];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     [self.postHUD show:YES];
     [NSURLConnection sendAsynchronousRequest:request
                queue:[NSOperationQueue mainQueue]
@@ -619,7 +619,7 @@
         }
     }
     NSURL *url = [NSURL URLWithString:str];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     [self.postHUD show:YES];
     [NSURLConnection sendAsynchronousRequest:request
                queue:[NSOperationQueue mainQueue]
@@ -661,7 +661,7 @@
         }
     }
     NSURL *url = [NSURL URLWithString:str];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     [self.postHUD show:YES];
     [NSURLConnection sendAsynchronousRequest:request
                queue:[NSOperationQueue mainQueue]
