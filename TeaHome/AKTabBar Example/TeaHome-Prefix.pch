@@ -24,7 +24,6 @@
 #define HOST_IP @"www.haorenao.cn"
 #define TeaHome_HOST @"http://www.haorenao.cn"
 #define CMD_URL @"http://www.haorenao.cn:8080/cmd/?cmd="
-//#define CMD_URL @"http://www.haorenao.cn:8080/cmd/?cmd="
 #define upload_image_to_server_url @"http://www.haorenao.cn:8080/save_file/"
 
 #define shop_image_root_url @"http://www.haorenao.cn/static/shopimages/"

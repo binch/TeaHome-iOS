@@ -379,9 +379,16 @@ static int page = 1;
     }else{
         height = 20;
     }
+    
+    NSString *images = [dic objectForKey:@"images"];
+    if (images == nil || [images isEqualToString:@""]) {
+        height = 80;
+    }
+    
+    
     UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 50, cell.bounds.size.width - 20, height)];
     contentLabel.text = content;
-    contentLabel.numberOfLines = 2;
+    contentLabel.numberOfLines = 0;
     contentLabel.backgroundColor = [UIColor clearColor];
     contentLabel.font = [UIFont systemFontOfSize:14];
     contentLabel.textColor = [UIColor blackColor];
@@ -390,7 +397,7 @@ static int page = 1;
     CGFloat y = contentLabel.frame.origin.y + contentLabel.frame.size.height + 5;
     
     CGFloat ImageViewHeight = 50;
-    NSString *images = [dic objectForKey:@"images"];
+    
     if (![images isEqualToString:@""] && images != nil) {
         UIScrollView *imagesView = [[UIScrollView alloc] initWithFrame:CGRectMake(10,y,280, ImageViewHeight)];
         imagesView.backgroundColor = [UIColor clearColor];
@@ -402,10 +409,10 @@ static int page = 1;
             NSString *imageUrl = [NSString stringWithFormat:@"%@%@.thumb.jpg",upload_image_root_url,name];
             UIImageView *iv = [[UIImageView alloc] init];
             [iv sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"image_loading"]];
-            iv.contentMode = UIViewContentModeScaleAspectFit;
-            [iv setFrame:CGRectMake(imagesViewx, 0, 80, ImageViewHeight)];
+            iv.contentMode = UIViewContentModeScaleAspectFill;
+            [iv setFrame:CGRectMake(imagesViewx, 0, 60, ImageViewHeight)];
             [imagesView addSubview:iv];
-            imagesViewx += 100;
+            imagesViewx += 85;
         }
         CGRect rect = imagesView.frame;
         if (rect.size.width >= imagesViewx) {
@@ -416,7 +423,7 @@ static int page = 1;
         imagesView.contentSize = CGSizeMake(imagesViewx, ImageViewHeight);
         y += ImageViewHeight;
     } else {
-        y += ImageViewHeight;
+        //y += ImageViewHeight;
     }
     
 //    y += 5;

@@ -12,7 +12,7 @@
 
 #define share_thread_url @"thread/html/"
 
-static CGFloat ImageViewHeight = 80;
+static CGFloat ImageViewHeight = 60;
 
 @interface ThreadReplysViewController ()
 
@@ -137,10 +137,10 @@ static CGFloat ImageViewHeight = 80;
 //        NSString *title = [NSString stringWithFormat:@"%@",[self.thread objectForKey:@"title"]];
 //        CGFloat titleHeight = [Utils heightForString:title withWidth:235 withFont:17];
         NSString *content = [NSString stringWithFormat:@"%@",[self.thread objectForKey:@"content"]];
-        CGFloat contentHeight = [Utils heightForString:content withWidth:280 withFont:15];
+        CGFloat contentHeight = [Utils heightForString:content withWidth:280 withFont:13];
         NSString *images = [NSString stringWithFormat:@"images"];
         if (![images isEqualToString:@""] && images != nil) {
-            return 50 + contentHeight + 10 + ImageViewHeight + 20;
+            return 50 + contentHeight + 30 + ImageViewHeight + 20;
         }
         return 50 + contentHeight + 5 + 20;
     }
@@ -148,10 +148,10 @@ static CGFloat ImageViewHeight = 80;
     CGFloat height = [Utils heightForString:[dic objectForKey:@"content"] withWidth:280 withFont:15];
     NSString *images = [dic objectForKey:@"images"];
     if (![images isEqualToString:@""] && images != nil) {
-        return 60 + height + 10 + ImageViewHeight;
+        return 60 + height + 20 + ImageViewHeight;
     }
-    //return 65 + height;
-    return 60 + height + 10 + ImageViewHeight;
+    return 65 + height;
+    //return 60 + height + 10 + ImageViewHeight;
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -279,7 +279,7 @@ static CGFloat ImageViewHeight = 80;
                 NSString *imageUrl = [NSString stringWithFormat:@"%@%@.thumb.jpg",upload_image_root_url,name];
                 UIImageView *iv = [[UIImageView alloc] init];
                 [iv sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"image_loading"]];
-                iv.contentMode = UIViewContentModeScaleAspectFit;
+                iv.contentMode = UIViewContentModeScaleAspectFill;
                 [iv setFrame:CGRectMake(imagesViewx, 0, ImageViewHeight, ImageViewHeight)];
                 [imagesView addSubview:iv];
                 imagesViewx += 100;
@@ -343,7 +343,7 @@ static CGFloat ImageViewHeight = 80;
     gradeLabel1.font = [UIFont systemFontOfSize:12];
     gradeLabel1.textColor = [UIColor grayColor];
     gradeLabel1.text = [dic objectForKey:@"grade"];
-    [cell addSubview:gradeLabel1];
+    //[cell addSubview:gradeLabel1];
     
     //用第几层
     UILabel *floorLabel = [[UILabel alloc] initWithFrame:CGRectMake(x+245, y, 60, 20)];
@@ -351,6 +351,7 @@ static CGFloat ImageViewHeight = 80;
     floorLabel.font = [UIFont systemFontOfSize:11];
     floorLabel.text = [NSString stringWithFormat:@"第 %d 楼", indexPath.row];
     floorLabel.userInteractionEnabled = YES;
+    floorLabel.textColor = [UIColor grayColor];
     floorLabel.tag = indexPath.row;
     
     tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapReplyZoneLayer:)];
@@ -364,6 +365,7 @@ static CGFloat ImageViewHeight = 80;
     replyLabel.font = [UIFont systemFontOfSize:11];
     replyLabel.text = [NSString stringWithFormat:@"回复本楼"];
     replyLabel.userInteractionEnabled = YES;
+    replyLabel.textColor = [UIColor grayColor];
     replyLabel.tag = indexPath.row;
     
     tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapReplyZoneLayer:)];
@@ -382,6 +384,7 @@ static CGFloat ImageViewHeight = 80;
     NSString *time = [NSString stringWithFormat:@"%@",[dic objectForKey:@"create_time"]];
     timeLabel.font = [UIFont systemFontOfSize:10];
     timeLabel.text = [time substringWithRange:NSMakeRange(0, 19)];
+    timeLabel.textColor = [UIColor grayColor];
     [cell addSubview:timeLabel];
     
     y += 55;

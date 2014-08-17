@@ -59,11 +59,11 @@
     [holderView addSubview:imageView];
     
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, 300-x, 20)];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, 300-x, 50)];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.numberOfLines = 0;
-    titleLabel.font = [UIFont systemFontOfSize:16];
-    titleLabel.textColor = [UIColor greenColor];
+    titleLabel.font = [UIFont systemFontOfSize:13];
+    titleLabel.textColor = [UIColor blueColor];
     titleLabel.text = title;
     [holderView addSubview:titleLabel];
     y += 30;
