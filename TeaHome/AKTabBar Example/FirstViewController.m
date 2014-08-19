@@ -426,7 +426,7 @@ static int page = 1;
     NSString *title = [d objectForKey:@"name"];
     ArticleContentViewController *acvc = [[ArticleContentViewController alloc] init];
     acvc.text = text;
-    acvc.articleTitle = title;
+    //acvc.articleTitle = title;
     acvc.articleId = [[d objectForKey:@"id"] intValue];
     [self.navigationController pushViewController:acvc animated:YES];
 }

@@ -132,6 +132,33 @@
     return YES;
 }
 
+-(NSString *)timeAgo:(NSDate*) date {
+    NSDate *todayDate = [NSDate date];
+    
+    double ti = [date timeIntervalSinceNow];
+    ti = ti * -1;
+    if (ti < 1) {
+        return @"1秒前";
+    } else if (ti < 60) {
+        return @"1分钟前";
+    } else if (ti < 3600) {
+        int diff = round(ti / 60);
+        return [NSString stringWithFormat:@"%d分钟前", diff];
+    } else if (ti < 86400) {
+        int diff = round(ti / 60 / 60);
+        return[NSString stringWithFormat:@"%d小时前", diff];
+    } else if (ti < 2629743) {
+        int diff = round(ti / 60 / 60 / 24);
+        return[NSString stringWithFormat:@"%d天前", diff];
+    } else if (ti < 31556926) {
+        int diff = round(ti / 60 / 60 / 24 / 30);
+        return [NSString stringWithFormat:@"%d月前", diff];
+    } else {
+        int diff = round(ti / 60 / 60 / 24 / 30 / 12);
+        return [NSString stringWithFormat:@"%d年前", diff];
+    }
+}
+
 #pragma mark -- 定时获取通知
 -(void)fetchAtmessages
 {

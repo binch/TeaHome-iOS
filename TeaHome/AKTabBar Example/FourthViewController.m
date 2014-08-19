@@ -235,7 +235,7 @@ static int page = 1;
     }
     //所有店铺
 //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    NSString *urlStr = [NSString stringWithFormat:@"%@%@",CMD_URL,get_shops_cmd];
+    NSString *urlStr = [NSString stringWithFormat:@"%@%@&username=%@",CMD_URL,get_shops_cmd,TeaHomeAppDelegate.username];
     NSURL *url = [NSURL URLWithString:urlStr];
     NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     [NSURLConnection sendAsynchronousRequest:request
@@ -266,7 +266,7 @@ static int page = 1;
     }
     
 //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    NSString *urlStr = [NSString stringWithFormat:@"%@%@",CMD_URL,get_products_cmd];
+    NSString *urlStr = [NSString stringWithFormat:@"%@%@&username=%@",CMD_URL,get_products_cmd,TeaHomeAppDelegate.username];
     NSURL *url = [NSURL URLWithString:urlStr];
     NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     [NSURLConnection sendAsynchronousRequest:request
@@ -679,16 +679,16 @@ static int page = 1;
         NSString *product_image_url = [NSString stringWithFormat:@"%@%d.jpg",product_image_root_url,productId];
         NSURL *url = [NSURL URLWithString:product_image_url];
         
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 20, 120, 120)];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 20, 80, 80)];
         imageView.backgroundColor = [UIColor clearColor];
         [imageView sd_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"image_loading"]];
         [cell addSubview:imageView];
         
-        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 20, 140, 20)];
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 10, 140, 40)];
         titleLabel.backgroundColor = [UIColor clearColor];
         titleLabel.numberOfLines = 0;
         titleLabel.font = [UIFont systemFontOfSize:16];
-        titleLabel.textColor = [UIColor greenColor];
+        titleLabel.textColor = [UIColor blueColor];
         titleLabel.text = title;
         [cell addSubview:titleLabel];
         
@@ -698,7 +698,7 @@ static int page = 1;
         categoryLabel.font = [UIFont systemFontOfSize:12];
         categoryLabel.textColor = [UIColor lightGrayColor];
         categoryLabel.text = @"[品种] : 乌龙茶";//TODO:
-        [cell addSubview:categoryLabel];
+        //[cell addSubview:categoryLabel];
         
         UILabel *produceLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 70, 140, 15)];
         produceLabel.backgroundColor = [UIColor clearColor];
@@ -706,17 +706,20 @@ static int page = 1;
         produceLabel.font = [UIFont systemFontOfSize:12];
         produceLabel.textColor = [UIColor lightGrayColor];
         produceLabel.text = @"[产地] : 台湾";//TODO:
-        [cell addSubview:produceLabel];
+        //[cell addSubview:produceLabel];
         
-        UILabel *soldLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 90, 140, 15)];
+        
+        UILabel *soldLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 50, 140, 15)];
         soldLabel.backgroundColor = [UIColor clearColor];
         soldLabel.numberOfLines = 0;
-        soldLabel.textColor = [UIColor blackColor];
+        soldLabel.textColor = [UIColor redColor];
         soldLabel.font = [UIFont systemFontOfSize:12];
-        soldLabel.text = [NSString stringWithFormat:@"销量: %d",sold];;
-        [cell addSubview:soldLabel];
+        soldLabel.text = [NSString stringWithFormat:@"折后: %d元",sold];;
+        if (sold > 0) {
+            [cell addSubview:soldLabel];
+        }
         
-        UILabel *priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 110, 140, 15)];
+        UILabel *priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 70, 140, 15)];
         priceLabel.backgroundColor = [UIColor clearColor];
         priceLabel.numberOfLines = 0;
         priceLabel.textColor = [UIColor blackColor];
@@ -816,7 +819,7 @@ static int page = 1;
         return 100;
     }else if ([tableView isEqual:self.productsView]){
         //商品
-        return 160;
+        return 100;
     }
     //商品评价
     return 70;
@@ -831,7 +834,7 @@ static int page = 1;
         NSDictionary *promotion = [self.promotions objectAtIndex:indexPath.row];
         
         int itemId = [[promotion objectForKey:@"item"] intValue];
-        NSString *url = [NSString stringWithFormat:@"%@%@&item=%d",CMD_URL,get_item_cmd,itemId];
+        NSString *url = [NSString stringWithFormat:@"%@%@&item=%d&username=%@",CMD_URL,get_item_cmd,itemId,TeaHomeAppDelegate.username];
         id jsonObj = [Utils getJsonDataFromWeb:url];
         if (jsonObj != nil) {
             product = (NSDictionary *)jsonObj;

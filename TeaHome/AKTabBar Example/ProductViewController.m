@@ -33,6 +33,12 @@
 {
     [super viewDidLoad];
     
+    self.tid = [[self.product objectForKey:@"id"] intValue];
+    
+    self.favor = [[self.product objectForKey:@"favor"] boolValue];
+    self.likeCount = [[self.product objectForKey:@"like_count"] intValue];
+    self.favorCount = [[self.product objectForKey:@"favor_count"] intValue];
+    
     self.view.backgroundColor = [UIColor whiteColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.hidesBottomBarWhenPushed = YES;
@@ -166,8 +172,143 @@
 //                                                             target:self
 //                                                             action:@selector(shareAction:)];
 //    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:share, nil];
+    UIImage *likeImage = [UIImage imageNamed:@"like_down"];
+    self.likeView = [[UIImageView alloc] initWithFrame:CGRectMake(50, self.view.bounds.size.height - 100, 30, 30)];
+    self.likeView.backgroundColor = [UIColor clearColor];
+    self.likeView.userInteractionEnabled = YES;
+    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleLikeTapAction:)];
+    [self.likeView addGestureRecognizer:gesture];
+    [self.likeView setImage:likeImage];
+    [self.view addSubview:self.likeView];
+    
+    self.likeLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, self.view.bounds.size.height - 100, 40, 30)];
+    self.likeLabel.numberOfLines = 0;
+    self.likeLabel.textAlignment = NSTextAlignmentRight;
+    self.likeLabel.textColor = [UIColor grayColor];
+    self.likeLabel.font = [UIFont systemFontOfSize:14];
+    self.likeLabel.text = [NSString stringWithFormat:@"%d赞",[[self.product objectForKey:@"like_count"] intValue]];
+    [self.view addSubview:self.likeLabel];
+    
+    UIImage *favImage = [UIImage imageNamed:@"like_no"];
+    self.favView = [[UIImageView alloc] initWithFrame:CGRectMake(140, self.view.bounds.size.height - 100, 30, 30)];
+    self.favView.backgroundColor = [UIColor clearColor];
+    self.favView.userInteractionEnabled = YES;
+    UITapGestureRecognizer *gesture2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFavTapAction:)];
+    [self.favView addGestureRecognizer:gesture2];
+    [self.favView setImage:favImage];
+    [self.view addSubview:self.favView];
+    
+    self.favorLabel = [[UILabel alloc] initWithFrame:CGRectMake(170, self.view.bounds.size.height - 100, 70, 30)];
+    self.favorLabel.numberOfLines = 0;
+    self.favorLabel.textAlignment = NSTextAlignmentRight;
+    self.favorLabel.textColor = [UIColor grayColor];
+    self.favorLabel.font = [UIFont systemFontOfSize:14];
+    self.favorLabel.text = [NSString stringWithFormat:@"%d收藏",[[self.product objectForKey:@"favor_count"] intValue]];
+    [self.view addSubview:self.favorLabel];
+    
+    self.favor = [[self.product objectForKey:@"favor"] boolValue];
+    if (self.favor) {
+        self.fav_state = true;
+        UIImage *likeImage;
+        likeImage = [UIImage imageNamed:@"like_yes"];
+        [self.favView setImage:likeImage];
+    } else {
+        self.fav_state = false;
+        UIImage *likeImage;
+        likeImage = [UIImage imageNamed:@"like_no"];
+        [self.favView setImage:likeImage];
+    }
+    
+    self.like = [[self.product objectForKey:@"like"] boolValue];
+    
+    if (self.like) {
+        self.like_state = true;
+        UIImage *likeImage;
+        likeImage = [UIImage imageNamed:@"like_up"];
+        [self.likeView setImage:likeImage];
+    } else {
+        self.like_state = false;
+        UIImage *likeImage;
+        likeImage = [UIImage imageNamed:@"like_down"];
+        [self.likeView setImage:likeImage];
+    }
+
+
+}
+
+-(void)handleFavTapAction:(UITapGestureRecognizer *)gesture
+{
+    NSString *str;
+    UIImage *favImage;
+    if (self.fav_state == true) {
+        favImage = [UIImage imageNamed:@"like_no"];
+        self.fav_state = false;
+        self.favorCount = self.favorCount - 1;
+        self.favorLabel.text = [NSString stringWithFormat:@"%d收藏",self.favorCount];
+        str = [NSString stringWithFormat:@"%@%@&username=%@&password=%@&type=item&id=%d",CMD_URL,@"unfavor",TeaHomeAppDelegate.username
+               ,TeaHomeAppDelegate.password,self.tid];
+    } else {
+        favImage = [UIImage imageNamed:@"like_yes"];
+        self.fav_state = true;
+        self.favorCount = self.favorCount + 1;
+        self.favorLabel.text = [NSString stringWithFormat:@"%d收藏",self.favorCount];
+        str = [NSString stringWithFormat:@"%@%@&username=%@&password=%@&type=item&id=%d",CMD_URL,@"favor",TeaHomeAppDelegate.username
+               ,TeaHomeAppDelegate.password,self.tid];
+    }
+    
+    [self.favView setImage:favImage];
+    NSURL *url = [NSURL URLWithString:str];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
+    //[self.postHUD show:YES];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               if ([[MBProgressHUD allHUDsForView:self.view] count] == 0) {
+                                   return ;
+                               }
+                               //[self.postHUD hide:YES];
+                               if (data != nil) {
+                               }
+                           }];
+}
+
+-(void)handleLikeTapAction:(UITapGestureRecognizer *)gesture
+{
+    NSString *str;
+    UIImage *likeImage;
+    if (self.like_state == true) {
+        likeImage = [UIImage imageNamed:@"like_down"];
+        self.like_state = false;
+        self.likeCount = self.likeCount - 1;
+        self.likeLabel.text = [NSString stringWithFormat:@"%d赞",self.likeCount];
+        str = [NSString stringWithFormat:@"%@%@&username=%@&password=%@&type=item&id=%d",CMD_URL,@"unlike",TeaHomeAppDelegate.username
+               ,TeaHomeAppDelegate.password,self.tid];
+    } else {
+        likeImage = [UIImage imageNamed:@"like_up"];
+        self.like_state = true;
+        self.likeCount = self.likeCount + 1;
+        self.likeLabel.text = [NSString stringWithFormat:@"%d赞",self.likeCount];
+        
+        str = [NSString stringWithFormat:@"%@%@&username=%@&password=%@&type=item&id=%d",CMD_URL,@"like",TeaHomeAppDelegate.username
+               ,TeaHomeAppDelegate.password,self.tid];
+    }
+    [self.likeView setImage:likeImage];
+    NSURL *url = [NSURL URLWithString:str];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
+    //[self.postHUD show:YES];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               if ([[MBProgressHUD allHUDsForView:self.view] count] == 0) {
+                                   return ;
+                               }
+                               //[self.postHUD hide:YES];
+                               if (data != nil) {
+                               }
+                           }];
     
 }
+
 
 -(void)checkCommentsAction:(UIButton *)btn
 {

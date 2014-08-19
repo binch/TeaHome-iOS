@@ -324,11 +324,38 @@ static int page = 1;
     }
     NSString *images = [dic objectForKey:@"images"];
     if (![images isEqualToString:@""] && images != nil) {
-        return 134 + height;
+        return 120;
     }
     //return 70 + height;
-    return 134 + height;
+    return 75;
 
+}
+
+-(NSString *)timeAgo:(NSDate*) date {
+    NSDate *todayDate = [NSDate date];
+    
+    double ti = [date timeIntervalSinceNow];
+    ti = ti * -1;
+    if (ti < 1) {
+        return @"1秒前";
+    } else if (ti < 60) {
+        return @"1分钟前";
+    } else if (ti < 3600) {
+        int diff = round(ti / 60);
+        return [NSString stringWithFormat:@"%d分钟前", diff];
+    } else if (ti < 86400) {
+        int diff = round(ti / 60 / 60);
+        return[NSString stringWithFormat:@"%d小时前", diff];
+    } else if (ti < 2629743) {
+        int diff = round(ti / 60 / 60 / 24);
+        return[NSString stringWithFormat:@"%d天前", diff];
+    } else if (ti < 31556926) {
+        int diff = round(ti / 60 / 60 / 24 / 30);
+        return [NSString stringWithFormat:@"%d月前", diff];
+    } else {
+        int diff = round(ti / 60 / 60 / 24 / 30 / 12);
+        return [NSString stringWithFormat:@"%d年前", diff];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -344,9 +371,16 @@ static int page = 1;
     NSArray *comments = [dic objectForKey:@"comments"];
     NSString *time = [[dic objectForKey:@"create_time"] substringWithRange:NSMakeRange(0, 19)];
     
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    //[dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]];
+    //[dateFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en"]];
+    NSDate *dateFromString = [dateFormatter dateFromString:time];
+    NSString *delta = [self timeAgo:dateFromString];
+    
     NSString *thumb = [dic objectForKey:@"thumb"];
     UIImage *image = [UIImage imageNamed:@"user_icon"];
-    UIImageView *userIconView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 30, 30)];
+    UIImageView *userIconView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 40, 40)];
     if ([thumb isEqualToString:@""] || thumb == nil) {
         [userIconView setImage:image];
     }else{
@@ -359,26 +393,9 @@ static int page = 1;
     [userIconView addGestureRecognizer:tap];
     [cell addSubview:userIconView];
     
-    UILabel *userLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 15, 110, 15)];
-    userLabel.text = username;
-    userLabel.backgroundColor = [UIColor clearColor];
-    userLabel.font = [UIFont systemFontOfSize:14];
-    userLabel.textColor = [UIColor blackColor];
-    [cell addSubview:userLabel];
-    
-    UILabel *gradeLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 30, 110, 15)];
-    gradeLabel.text = grade;
-    gradeLabel.backgroundColor = [UIColor clearColor];
-    gradeLabel.font = [UIFont systemFontOfSize:12];
-    gradeLabel.textColor = [UIColor grayColor];
-    [cell addSubview:gradeLabel];
     
     CGFloat height = [Utils heightForString:content withWidth:300 withFont:15];
-    if (height > 20) {
-        height = 40;
-    }else{
-        height = 20;
-    }
+    height = 40;
     
     NSString *images = [dic objectForKey:@"images"];
     if (images == nil || [images isEqualToString:@""]) {
@@ -386,20 +403,21 @@ static int page = 1;
     }
     
     
-    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 50, cell.bounds.size.width - 20, height)];
+    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(70, 10, cell.bounds.size.width - 70, height)];
     contentLabel.text = content;
-    contentLabel.numberOfLines = 0;
+    contentLabel.numberOfLines = 2;
     contentLabel.backgroundColor = [UIColor clearColor];
     contentLabel.font = [UIFont systemFontOfSize:14];
     contentLabel.textColor = [UIColor blackColor];
+    [contentLabel sizeToFit];
     [cell addSubview:contentLabel];
     
-    CGFloat y = contentLabel.frame.origin.y + contentLabel.frame.size.height + 5;
+    CGFloat y = 45;
     
     CGFloat ImageViewHeight = 50;
     
     if (![images isEqualToString:@""] && images != nil) {
-        UIScrollView *imagesView = [[UIScrollView alloc] initWithFrame:CGRectMake(10,y,280, ImageViewHeight)];
+        UIScrollView *imagesView = [[UIScrollView alloc] initWithFrame:CGRectMake(70,y,280, ImageViewHeight)];
         imagesView.backgroundColor = [UIColor clearColor];
         imagesView.tag = indexPath.row;
         [cell addSubview:imagesView];
@@ -422,8 +440,10 @@ static int page = 1;
         }
         imagesView.contentSize = CGSizeMake(imagesViewx, ImageViewHeight);
         y += ImageViewHeight;
+        y = 98;
     } else {
         //y += ImageViewHeight;
+        y = 50;
     }
     
 //    y += 5;
@@ -434,10 +454,24 @@ static int page = 1;
 //    replyLabel.textColor = [UIColor lightGrayColor];
 //    [cell addSubview:replyLabel];
 //
-    y += 5;
     
-    UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, y, 140,15)];
-    timeLabel.text = time;
+    
+    UILabel *userLabel = [[UILabel alloc] initWithFrame:CGRectMake(70, y, 110, 15)];
+    userLabel.text = username;
+    userLabel.backgroundColor = [UIColor clearColor];
+    userLabel.font = [UIFont systemFontOfSize:12];
+    userLabel.textColor = [UIColor grayColor];
+    [cell addSubview:userLabel];
+    
+    UILabel *gradeLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 30, 110, 15)];
+    gradeLabel.text = grade;
+    gradeLabel.backgroundColor = [UIColor clearColor];
+    gradeLabel.font = [UIFont systemFontOfSize:12];
+    gradeLabel.textColor = [UIColor grayColor];
+    //[cell addSubview:gradeLabel];
+    
+    UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, y, 70,15)];
+    timeLabel.text = delta;
 //    timeLabel.textAlignment = NSTextAlignmentRight;
     timeLabel.backgroundColor = [UIColor clearColor];
     timeLabel.font = [UIFont systemFontOfSize:12];
@@ -445,7 +479,7 @@ static int page = 1;
     [cell addSubview:timeLabel];
     
     UILabel *commentCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, y, 140,15)];
-    commentCountLabel.text = [NSString stringWithFormat:@"回复数:%d",[comments count]];
+    commentCountLabel.text = [NSString stringWithFormat:@"%d回复",[comments count]];
     commentCountLabel.backgroundColor = [UIColor clearColor];
     commentCountLabel.font = [UIFont systemFontOfSize:12];
     commentCountLabel.textColor = [Utils hexStringToColor:navigation_bar_color];
