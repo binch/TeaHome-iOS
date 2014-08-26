@@ -7,6 +7,7 @@
 //
 
 #import "SimpleUserinfoViewController.h"
+#import "ThreadsViewController.h"
 
 #define get_userinfo_cmd @"get_userinfo"
 
@@ -72,7 +73,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 4;
+    return 5;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -172,6 +173,9 @@
         usernameLabel.textAlignment = NSTextAlignmentRight;
         usernameLabel.textColor = [Utils hexStringToColor:navigation_bar_color];
         [cell addSubview:usernameLabel];
+    }else if (indexPath.row == 4) {
+        //cell.imageView.image = [UIImage imageNamed:@"user_bill"];
+        cell.textLabel.text = @"   查看他/她的贴子";
     }
     
     return cell;
@@ -227,5 +231,15 @@
 }
 
  */
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == 4) {
+        ThreadsViewController *tvc = [[ThreadsViewController alloc] init];
+        tvc.his_username = self.username;
+        tvc.type = 2;
+        tvc.name = @"他/她的贴子";
+        [self.navigationController pushViewController:tvc animated:YES];
+    }
+}
 
 @end

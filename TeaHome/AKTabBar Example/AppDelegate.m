@@ -14,6 +14,9 @@
 #import "QuestionsViewController.h"
 #import "HomeViewController.h"
 #import "BoardsViewController.h"
+#import <ShareSDK/ShareSDK.h>
+#import "WXApi.h"
+#import <TencentOpenAPI/TencentOAuth.h>
 
 #import "CartItem.h"
 
@@ -22,6 +25,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [ShareSDK registerApp:@"2c53a0305290"];
+    
+    [ShareSDK connectWeChatWithAppId:@"wx2ffd4bce6eb8488d"
+                           wechatCls:[WXApi class]];
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:
      [NSDictionary dictionaryWithObjectsAndKeys:
@@ -131,6 +138,7 @@
     
     return YES;
 }
+
 
 -(NSString *)timeAgo:(NSDate*) date {
     NSDate *todayDate = [NSDate date];
@@ -272,6 +280,37 @@
 {
     [self fetchAtmessages];
     [[NSNotificationCenter defaultCenter] postNotificationName:kRefreshNoteCenterViewNotification object:nil];
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    //    NSString *strUrl = @"http://dajdklajdka?";
+    //    url = [NSURL URLWithString:strUrl];
+    
+#if __QQAPI_ENABLE__
+    [QQApiInterface handleOpenURL:url delegate:(id<QQApiInterfaceDelegate>)[QQAPIDemoEntry class]];
+#endif
+    
+    if (YES == [TencentOAuth CanHandleOpenURL:url])
+    {
+        //UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Where from" message:url.description delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
+        //[alertView show];
+        return [TencentOAuth HandleOpenURL:url];
+    }
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+#if __QQAPI_ENABLE__
+    [QQApiInterface handleOpenURL:url delegate:(id<QQApiInterfaceDelegate>)[QQAPIDemoEntry class]];
+#endif
+    
+    if (YES == [TencentOAuth CanHandleOpenURL:url])
+    {
+        return [TencentOAuth HandleOpenURL:url];
+    }
+    return YES;
 }
 
 @end

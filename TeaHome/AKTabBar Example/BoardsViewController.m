@@ -178,6 +178,7 @@
     NSString *name = [board objectForKey:@"name"];
     int bid = [[board objectForKey:@"id"] intValue];
     ThreadsViewController *tvc = [[ThreadsViewController alloc] init];
+    tvc.type = 0; // board
     tvc.bid = bid;
     tvc.name = name;
     [self.navigationController pushViewController:tvc animated:YES];

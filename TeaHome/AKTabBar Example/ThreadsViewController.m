@@ -114,7 +114,14 @@ static int page = 1;
         return;
     }
 //    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    NSString *urlStr = [NSString stringWithFormat:@"%@%@&board=%d&username=%@&page=%d",CMD_URL,get_threads_cmd,self.bid,TeaHomeAppDelegate.username,pageNumber];
+    NSString *urlStr;
+    if (self.type == 0) {
+        urlStr = [NSString stringWithFormat:@"%@%@&type=board&board=%d&username=%@&page=%d",CMD_URL,get_threads_cmd,self.bid,TeaHomeAppDelegate.username,pageNumber];
+    } else if (self.type == 1) {
+        urlStr = [NSString stringWithFormat:@"%@%@&type=favor&username=%@&page=%d",CMD_URL,get_threads_cmd,TeaHomeAppDelegate.username,pageNumber];
+    } else if (self.type == 2) {
+        urlStr = [NSString stringWithFormat:@"%@%@&type=user_thread&his_username=%@&username=%@&page=%d",CMD_URL,get_threads_cmd,self.his_username,TeaHomeAppDelegate.username,pageNumber];
+    }
     NSURL *url = [NSURL URLWithString:urlStr];
     NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15];
     [NSURLConnection sendAsynchronousRequest:request
@@ -369,6 +376,7 @@ static int page = 1;
     NSString *grade = [dic objectForKey:@"grade"];
     NSString *username = [dic objectForKey:@"nickname"];
     NSArray *comments = [dic objectForKey:@"comments"];
+    int like_count = [[dic objectForKey:@"like_count"] intValue];
     NSString *time = [[dic objectForKey:@"create_time"] substringWithRange:NSMakeRange(0, 19)];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -479,7 +487,7 @@ static int page = 1;
     [cell addSubview:timeLabel];
     
     UILabel *commentCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, y, 140,15)];
-    commentCountLabel.text = [NSString stringWithFormat:@"%d回复",[comments count]];
+    commentCountLabel.text = [NSString stringWithFormat:@"%d赞 | %d回复", like_count, [comments count]];
     commentCountLabel.backgroundColor = [UIColor clearColor];
     commentCountLabel.font = [UIFont systemFontOfSize:12];
     commentCountLabel.textColor = [Utils hexStringToColor:navigation_bar_color];

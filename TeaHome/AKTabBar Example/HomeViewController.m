@@ -5,6 +5,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "CartDetailViewController.h"
 #import "WholeOrdersViewController.h"
+#import "FavorTableViewController.h"
 #import "LoginViewController.h"
 #import "NoteCenterViewController.h"
 #import "UserInfoDetailViewController.h"
@@ -17,6 +18,7 @@ typedef NS_ENUM(int, kLabelTag) {
     kAddrLabelTag,
     kPhoneLabelTag,
     kPayMethodLabelTag,
+    kFavorLabelTag,
 };
 
 @interface HomeViewController ()
@@ -112,7 +114,7 @@ typedef NS_ENUM(int, kLabelTag) {
 #pragma mark - tableview delegate method
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 6;
+    return 7;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -197,8 +199,11 @@ typedef NS_ENUM(int, kLabelTag) {
         cell.textLabel.text = NSLocalizedString(@"通知中心", @"通知中心");
         cell.imageView.image = [UIImage imageNamed:@"user_info"];
     }else if (indexPath.row == 4) {
-        cell.userInteractionEnabled = NO;
+        cell.textLabel.text = NSLocalizedString(@"我的收藏", @"我的收藏");
+        cell.imageView.image = [UIImage imageNamed:@"user_bill"];
     }else if (indexPath.row == 5) {
+        cell.userInteractionEnabled = NO;
+    }else if (indexPath.row == 6) {
         cell.textLabel.text = NSLocalizedString(@"退出登录", @"退出登录");
         [cell.textLabel setContentMode:UIViewContentModeCenter];
         //cell.imageView.image = [UIImage imageNamed:@"login"];
@@ -218,7 +223,9 @@ typedef NS_ENUM(int, kLabelTag) {
        [self handleTapGesture:kOrderLabelTag];
     }else if (indexPath.row == 3) {
        [self handleTapGesture:kNotifyLabelTag];
-    }else if (indexPath.row == 5) {
+    }else if (indexPath.row == 4) {
+        [self handleTapGesture:kFavorLabelTag];
+    }else if (indexPath.row == 6) {
         [self logoutAction];
     }
 }
@@ -262,6 +269,12 @@ typedef NS_ENUM(int, kLabelTag) {
         {
             WholeOrdersViewController *ovc = [[WholeOrdersViewController alloc] init];
             [self.navigationController pushViewController:ovc animated:YES];
+        }
+            break;
+        case kFavorLabelTag:
+        {
+            FavorTableViewController *ncvc = [[FavorTableViewController alloc] init];
+            [self.navigationController pushViewController:ncvc animated:YES];
         }
             break;
         case kNotifyLabelTag:

@@ -25,8 +25,10 @@
 @property(nonatomic,strong) UIImageView *favView;
 @property(nonatomic,strong) UILabel *favorLabel;
 @property(nonatomic,strong) UILabel *likeLabel;
+@property(nonatomic,assign) bool get_data;
 @property(nonatomic,assign) bool like;
 @property(nonatomic,assign) bool favor;
 @property(nonatomic,assign) bool fav_state;
 @property(nonatomic,assign) bool like_state;
+@property(nonatomic,strong) UIImageView *shareView;
 @end

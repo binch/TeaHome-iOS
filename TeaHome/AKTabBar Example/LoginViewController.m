@@ -8,14 +8,105 @@
 
 #import "LoginViewController.h"
 #import "RegistViewController.h"
+#import <TencentOpenAPI/TencentMessageObject.h>
 
 #define login_cmd @"login_user"
 
-@interface LoginViewController ()
+@interface LoginViewController () <TencentSessionDelegate>
 
 @end
 
 @implementation LoginViewController
+
+#pragma mark - TencentLoginDelegate
+
+- (void)tencentDidLogin
+{
+    [self.oauth getUserInfo];
+}
+
+- (void)tencentDidNotLogin:(BOOL)cancelled
+{
+
+}
+
+- (void)tencentDidNotNetWork
+{
+
+}
+
+
+- (void)responseDidReceivedNotify:(NSNotification *)notify
+{
+    APIResponse *response = [[notify userInfo] objectForKey:kResponse];
+    NSString    *messsage = [[notify userInfo] objectForKey:kMessage];
+    [self responseDidReceived:response forMessage:messsage];
+}
+
+#pragma mark - TencentSessionDelegate
+
+- (void)tencentDidLogout
+{
+
+}
+
+- (void)getUserInfoResponse:(APIResponse*) response
+{
+    NSDictionary *dic = response.jsonResponse;
+    NSString *nickname = [dic objectForKey:@"nickname"];
+    NSString *openid = self.oauth.openId;
+    
+    NSString *str = [NSString stringWithFormat:@"%@%@",CMD_URL,@"reg_user"];
+    str = [str stringByAppendingFormat:@"&username=%@",[openid substringToIndex:30]];
+    str = [str stringByAppendingFormat:@"&password=%@",@"qqpassword"];
+    str = [str stringByAppendingFormat:@"&mobile=%@",@"11111111111"];
+    
+    id jsonObj = [Utils getJsonDataFromWeb:str];
+    if (jsonObj != nil) {
+        NSString *result = [jsonObj objectForKey:@"ret"];
+        if ([result isEqualToString:@"ok"]) {
+            [Utils showAlertViewWithMessage:@"注册成功."];
+            TeaHomeAppDelegate.username = self.usernameField.text;
+            TeaHomeAppDelegate.password = self.passwordField.text;
+            [self.navigationController popViewControllerAnimated:YES];
+        }else{
+            //[Utils showAlertViewWithMessage:@"用户名重复，请使用其他用户名."];
+            
+        }
+    }else{
+        [Utils showAlertViewWithMessage:@"网络链接出错，请稍后再试."];
+    }
+    
+    str = [NSString stringWithFormat:@"%@%@",CMD_URL,login_cmd];
+    str = [str stringByAppendingFormat:@"&username=%@",[openid substringToIndex:30]];
+    str = [str stringByAppendingFormat:@"&password=%@",@"qqpassword"];
+    str = [str stringByAppendingFormat:@"&deviceid=%@",TeaHomeAppDelegate.deviceId];
+    NSLog(@"%@", str);
+    jsonObj = [Utils getJsonDataFromWeb:str];
+    if (jsonObj != nil) {
+        NSString *result = [jsonObj objectForKey:@"ret"];
+        if ([result isEqualToString:@"ok"]) {
+            [Utils showAlertViewWithMessage:@"登录成功."];
+            TeaHomeAppDelegate.username = [openid substringToIndex:30];
+            TeaHomeAppDelegate.password = @"qqpassword";
+            [TeaHomeAppDelegate.timer fire];
+            [[NSUserDefaults standardUserDefaults]  setObject:TeaHomeAppDelegate.username forKey:Username];
+            [[NSUserDefaults standardUserDefaults] setObject:TeaHomeAppDelegate.password forKey:Password];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            [self backAction];
+        }else{
+            [Utils showAlertViewWithMessage:@"登录失败，请重试."];
+        }
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                        message:@"网络链接出错，请稍后再试."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"确定"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -26,9 +117,50 @@
     return self;
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation{
+    return [TencentOAuth HandleOpenURL:url];
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url{
+    return [TencentOAuth HandleOpenURL:url];
+}
+
+- (void)analysisResponse:(NSNotification *)notify
+{
+    if (notify)
+    {
+        APIResponse *response = [[notify userInfo] objectForKey:kResponse];
+        if (URLREQUEST_SUCCEED == response.retCode && kOpenSDKErrorSuccess == response.detailRetCode)
+        {
+            NSMutableString *str=[NSMutableString stringWithFormat:@""];
+            for (id key in response.jsonResponse)
+            {
+                [str appendString: [NSString stringWithFormat:@"%@:%@\n",key,[response.jsonResponse objectForKey:key]]];
+            }
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"操作成功" message:[NSString stringWithFormat:@"%@",str]
+                                  
+                                                           delegate:self cancelButtonTitle:@"我知道啦" otherButtonTitles: nil];
+            [alert show];
+        }
+        else
+        {
+            NSString *errMsg = [NSString stringWithFormat:@"errorMsg:%@\n%@", response.errorMsg, [response.jsonResponse objectForKey:@"msg"]];
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"操作失败" message:errMsg delegate:self cancelButtonTitle:@"我知道啦" otherButtonTitles: nil];
+            [alert show];
+        }
+    }
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.oauth = [[TencentOAuth alloc] initWithAppId:@"1102093062" andDelegate:self];
+    self.oauth.redirectURI = @"teahome://login/";
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(analysisResponse:) name:kGetUserInfoResponse object:self.oauth];
 
     self.title = @"登录";
     self.view.backgroundColor = [UIColor whiteColor];
@@ -161,4 +293,8 @@
 }
 
 
+- (IBAction)qqLogin:(id)sender {
+    NSArray *permissions = [NSArray arrayWithObjects:@"all", nil];
+    [self.oauth authorize:permissions inSafari:NO];
+}
 @end

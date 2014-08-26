@@ -22,14 +22,15 @@
 #endif
 
 #define HOST_IP @"www.haorenao.cn"
-#define TeaHome_HOST @"http://www.haorenao.cn"
-#define CMD_URL @"http://www.haorenao.cn:8080/cmd/?cmd="
-#define upload_image_to_server_url @"http://www.haorenao.cn:8080/save_file/"
+#define TeaHome_HOST @"http://119.254.110.190/"
+#define CMD_URL @"http://119.254.110.190/cmd/?cmd="
+#define THREAD_URL @"http://119.254.110.190/thread/html/"
+#define upload_image_to_server_url @"http://119.254.110.190/save_file/"
 
-#define shop_image_root_url @"http://www.haorenao.cn/static/shopimages/"
-#define product_image_root_url @"http://www.haorenao.cn/static/shopimages/item/"
-#define promotion_image_root_url @"http://www.haorenao.cn/static/shopimages/promotion/"
-#define upload_image_root_url @"http://www.haorenao.cn/static/tea/threadimages/"
+#define shop_image_root_url @"http://119.254.108.135/static/shopimages/"
+#define product_image_root_url @"http://119.254.108.135/static/shopimages/item/"
+#define promotion_image_root_url @"http://119.254.108.135/static/shopimages/promotion/"
+#define upload_image_root_url @"http://119.254.108.135/static/tea/threadimages/"
 
 
 //分享

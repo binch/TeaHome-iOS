@@ -9,6 +9,7 @@
 #import "ThreadReplysViewController.h"
 #import "PostThreadViewController.h"
 #import "SimpleUserinfoViewController.h"
+#import <ShareSDK/ShareSDK.h>
 
 #define share_thread_url @"thread/html/"
 
@@ -54,6 +55,7 @@ static CGFloat ImageViewHeight = 60;
     //                                                             target:self
     //                                                             action:@selector(shareAction:)];
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:reply, nil];
+
     
 }
 
@@ -87,6 +89,8 @@ static CGFloat ImageViewHeight = 60;
         [Utils showAlertViewWithMessage:@"无网络,请稍后再试."];
         return;
     }
+    
+    self.get_data = false;
 
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSString *urlStr = [NSString stringWithFormat:@"%@%@&thread=%d&username=%@",CMD_URL,update_comment_cmd,self.tid,TeaHomeAppDelegate.username];
@@ -100,6 +104,7 @@ static CGFloat ImageViewHeight = 60;
            NSError *error;
            id jsonObj = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
            if (jsonObj != nil) {
+               self.get_data = true;
                self.thread = (NSDictionary *)jsonObj;
                self.likeCount = [[self.thread objectForKey:@"like_count"] intValue];
                self.favorCount = [[self.thread objectForKey:@"favor_count"] intValue];
@@ -124,6 +129,9 @@ static CGFloat ImageViewHeight = 60;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (self.get_data == false) {
+        return 0;
+    }
     if (section == 0) {
         return 1;
     }
@@ -144,7 +152,7 @@ static CGFloat ImageViewHeight = 60;
 //        NSString *title = [NSString stringWithFormat:@"%@",[self.thread objectForKey:@"title"]];
 //        CGFloat titleHeight = [Utils heightForString:title withWidth:235 withFont:17];
         NSString *content = [NSString stringWithFormat:@"%@",[self.thread objectForKey:@"content"]];
-        CGFloat contentHeight = [Utils heightForString:content withWidth:280 withFont:13];
+        CGFloat contentHeight = [Utils heightForString:content withWidth:280 withFont:14];
         NSString *images = [NSString stringWithFormat:@"images"];
         if (![images isEqualToString:@""] && images != nil) {
             return 50 + contentHeight + 30 + ImageViewHeight + 30;
@@ -253,6 +261,33 @@ static CGFloat ImageViewHeight = 60;
 
 }
 
+-(NSString *)timeAgo:(NSDate*) date {
+    NSDate *todayDate = [NSDate date];
+    
+    double ti = [date timeIntervalSinceNow];
+    ti = ti * -1;
+    if (ti < 1) {
+        return @"1秒前";
+    } else if (ti < 60) {
+        return @"1分钟前";
+    } else if (ti < 3600) {
+        int diff = round(ti / 60);
+        return [NSString stringWithFormat:@"%d分钟前", diff];
+    } else if (ti < 86400) {
+        int diff = round(ti / 60 / 60);
+        return[NSString stringWithFormat:@"%d小时前", diff];
+    } else if (ti < 2629743) {
+        int diff = round(ti / 60 / 60 / 24);
+        return[NSString stringWithFormat:@"%d天前", diff];
+    } else if (ti < 31556926) {
+        int diff = round(ti / 60 / 60 / 24 / 30);
+        return [NSString stringWithFormat:@"%d月前", diff];
+    } else {
+        int diff = round(ti / 60 / 60 / 24 / 30 / 12);
+        return [NSString stringWithFormat:@"%d年前", diff];
+    }
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
@@ -301,14 +336,31 @@ static CGFloat ImageViewHeight = 60;
         [cell addSubview:gradeLabel];
         
         //发帖时间
-        UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(x+45, y+25, 200, 15)];
+        UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(x+45, y+25, 100, 15)];
         timeLabel.backgroundColor = [UIColor clearColor];
-        NSString *time = [self.thread objectForKey:@"create_time"];
-        timeLabel.text = [time substringWithRange:NSMakeRange(0, 19)];
+        NSString *dd = [self.thread objectForKey:@"create_time"];
+        NSString *time = [[NSString stringWithFormat:@"%@",[self.thread objectForKey:@"create_time"]] substringWithRange:NSMakeRange(0, 19)];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        NSDate *dateFromString = [dateFormatter dateFromString:time];
+        NSString *delta = [self timeAgo:dateFromString];
+        timeLabel.text = delta;
         [timeLabel setFont:[UIFont systemFontOfSize:10]];
         timeLabel.textColor = [UIColor lightGrayColor];
         [cell addSubview:timeLabel];
         
+        UILabel *button = [[UILabel alloc] initWithFrame:CGRectMake(x+145, y+25, 100, 15)];
+        button.text = @"删除";
+        [button  setFont:[UIFont systemFontOfSize:10]];
+        button.textColor = [UIColor blueColor];
+        button.userInteractionEnabled = YES;
+        NSString *username = [self.thread objectForKey:@"username"];
+        if ([username isEqualToString:TeaHomeAppDelegate.username]) {
+            [cell addSubview:button];
+            UITapGestureRecognizer *tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDelTapAction:)];
+            [button addGestureRecognizer:tap2];
+        }
+
         y += 40;
         
         //发帖标题
@@ -370,8 +422,10 @@ static CGFloat ImageViewHeight = 60;
         
         y += 5;
         
+        int icon_size = 20;
+        
         UIImage *likeImage = [UIImage imageNamed:@"like_down"];
-        self.likeView = [[UIImageView alloc] initWithFrame:CGRectMake(50, y, 30, 30)];
+        self.likeView = [[UIImageView alloc] initWithFrame:CGRectMake(10, y, icon_size, icon_size)];
         self.likeView.backgroundColor = [UIColor clearColor];
         self.likeView.userInteractionEnabled = YES;
         UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleLikeTapAction:)];
@@ -393,16 +447,19 @@ static CGFloat ImageViewHeight = 60;
         [self.view addSubview:self.likeView];
         
         //评论数
-        self.likeLabel = [[UILabel alloc] initWithFrame:CGRectMake(65, y+5, 40, 15)];
+        self.likeLabel = [[UILabel alloc] initWithFrame:CGRectMake(13, y+3, 40, 15)];
         self.likeLabel.backgroundColor = [UIColor clearColor];
         self.likeLabel.font = [UIFont systemFontOfSize:13];
         self.likeLabel.textColor = [UIColor lightGrayColor];
+        self.likeLabel.userInteractionEnabled = YES;
         self.likeLabel.textAlignment = NSTextAlignmentRight;
         self.likeLabel.text = [NSString stringWithFormat:@"%d赞",[[self.thread objectForKey:@"like_count"] intValue]];//
+        gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleLikeTapAction:)];
+        [self.likeLabel addGestureRecognizer:gesture];
         [cell addSubview:self.likeLabel];
         
         UIImage *favImage = [UIImage imageNamed:@"like_no"];
-        self.favView = [[UIImageView alloc] initWithFrame:CGRectMake(140, y, 30, 30)];
+        self.favView = [[UIImageView alloc] initWithFrame:CGRectMake(80, y, icon_size, icon_size)];
         self.favView.backgroundColor = [UIColor clearColor];
         self.favView.userInteractionEnabled = YES;
         UITapGestureRecognizer *gesture2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFavTapAction:)];
@@ -424,13 +481,38 @@ static CGFloat ImageViewHeight = 60;
         [self.view addSubview:self.favView];
         
         //评论数
-        self.favorLabel = [[UILabel alloc] initWithFrame:CGRectMake(165, y+5, 40, 15)];
+        self.favorLabel = [[UILabel alloc] initWithFrame:CGRectMake(103, y+3, 40, 15)];
         self.favorLabel.backgroundColor = [UIColor clearColor];
         self.favorLabel.font = [UIFont systemFontOfSize:13];
         self.favorLabel.textColor = [UIColor lightGrayColor];
-        self.favorLabel.textAlignment = NSTextAlignmentRight;
+        self.favorLabel.userInteractionEnabled = YES;
+        //self.favorLabel.textAlignment = NSTextAlignmentRight;
         self.favorLabel.text = [NSString stringWithFormat:@"%d收藏",[[self.thread objectForKey:@"favor_count"] intValue]];//
+        gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFavTapAction:)];
+        [self.favorLabel addGestureRecognizer:gesture];
         [cell addSubview:self.favorLabel];
+        
+        UIImage *shareImage = [UIImage imageNamed:@"user_wallet"];
+        self.shareView = [[UIImageView alloc] initWithFrame:CGRectMake(160, y, icon_size, icon_size)];
+        self.shareView.backgroundColor = [UIColor clearColor];
+        self.shareView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *gesture3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleShareTapAction:)];
+        [self.shareView addGestureRecognizer:gesture3];
+        [self.shareView setImage:shareImage];
+        [self.view addSubview:self.shareView];
+        
+        UILabel *shareLabel = [[UILabel alloc] initWithFrame:CGRectMake(183, y+3, 30, 15)];
+        shareLabel.numberOfLines = 0;
+        //shareLabel.textAlignment = NSTextAlignmentRight;
+        shareLabel.textColor = [UIColor grayColor];
+        shareLabel.font = [UIFont systemFontOfSize:14];
+        shareLabel.text = @"分享";
+        shareLabel.userInteractionEnabled = YES;
+        gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleShareTapAction:)];
+        [shareLabel addGestureRecognizer:gesture];
+        [self.view addSubview:shareLabel];
+        
+        
         
         //评论数
         UILabel *replyLabel = [[UILabel alloc] initWithFrame:CGRectMake(240, y, 60, 15)];
@@ -523,17 +605,21 @@ static CGFloat ImageViewHeight = 60;
     //回复时间
     UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(x+45, y+25, 220, 15)];
     timeLabel.backgroundColor = [UIColor clearColor];
-    NSString *time = [NSString stringWithFormat:@"%@",[dic objectForKey:@"create_time"]];
+    NSString *time = [[NSString stringWithFormat:@"%@",[dic objectForKey:@"create_time"]] substringWithRange:NSMakeRange(0, 19)];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *dateFromString = [dateFormatter dateFromString:time];
+    NSString *delta = [self timeAgo:dateFromString];
     timeLabel.font = [UIFont systemFontOfSize:10];
-    timeLabel.text = [time substringWithRange:NSMakeRange(0, 19)];
+    timeLabel.text = delta;
     timeLabel.textColor = [UIColor grayColor];
     [cell addSubview:timeLabel];
     
     y += 55;
     
     //回复正文
-    CGFloat height = [Utils heightForString:[dic objectForKey:@"content"] withWidth:280 withFont:13];
-    UILabel *contenLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, 280, height)];
+    CGFloat height = [Utils heightForString:[dic objectForKey:@"content"] withWidth:280 withFont:14];
+    UILabel *contenLabel = [[UILabel alloc] initWithFrame:CGRectMake(65, y, 250, height)];
     contenLabel.backgroundColor = [UIColor clearColor];
     contenLabel.numberOfLines = 0;
     contenLabel.font = [UIFont systemFontOfSize:13];
@@ -630,6 +716,28 @@ static CGFloat ImageViewHeight = 60;
     [self.navigationController pushViewController:suvc animated:YES];
 }
 
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        NSString *str = [NSString stringWithFormat:@"%@%@&username=%@&password=%@&id=%d",CMD_URL,@"del_thread",TeaHomeAppDelegate.username
+                         ,TeaHomeAppDelegate.password,self.tid];
+    
+        id jsonObj = [Utils getJsonDataFromWeb:str];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kPostThreadSuccessNotification object:nil];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+-(void)handleDelTapAction:(UITapGestureRecognizer *)tap
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"确认删除贴子"
+                                                    message:@"是否确认？"
+                                                   delegate:self
+                                          cancelButtonTitle:nil
+                                          otherButtonTitles:@"确定删除",@"取消", nil];
+    [alert show];
+}
+
 #pragma mark -- 点击第几楼的时候进入回复
 -(void)tapReplyZoneLayer:(UITapGestureRecognizer *)tap
 {
@@ -670,5 +778,40 @@ static CGFloat ImageViewHeight = 60;
     [[UIPasteboard generalPasteboard] setPersistent:YES];
     [[UIPasteboard generalPasteboard] setValue:self.mycopytext forPasteboardType:[UIPasteboardTypeListString objectAtIndex:0]];
 }
+
+-(void)handleShareTapAction:(UITapGestureRecognizer *)gesture
+{
+    NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"ShareSDK"  ofType:@"jpg"];
+    NSString *url = [NSString stringWithFormat:@"%@%d",THREAD_URL,self.tid];
+    NSString *content = [NSString stringWithFormat:@"%@",[self.thread objectForKey:@"content"]];
+    
+    //构造分享内容
+    id<ISSContent> publishContent = [ShareSDK content:@"分享内容"
+                                       defaultContent:@"默认分享内容，没内容时显示"
+                                                image:[ShareSDK imageWithPath:imagePath]
+                                                title:content
+                                                  url:url
+                                          description:@"这是一条测试信息"
+                                            mediaType:SSPublishContentMediaTypeNews];
+    
+    [ShareSDK showShareActionSheet:nil
+                         shareList:nil
+                           content:publishContent
+                     statusBarTips:YES
+                       authOptions:nil
+                      shareOptions: nil
+                            result:^(ShareType type, SSResponseState state, id<ISSPlatformShareInfo> statusInfo, id<ICMErrorInfo> error, BOOL end) {
+                                if (state == SSResponseStateSuccess)
+                                {
+                                    NSLog(@"分享成功");
+                                }
+                                else if (state == SSResponseStateFail)
+                                {
+                                    NSLog(@"分享失败,错误码:%d,错误描述:%@", [error errorCode], [error errorDescription]);
+                                }
+                            }];
+    
+}
+
 
 @end

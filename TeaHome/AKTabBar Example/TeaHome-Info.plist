@@ -27,12 +27,30 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.haorenao.teahome.login</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>teahome</string>
+			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string></string>
+			<string>tencent</string>
 			<key>CFBundleURLSchemes</key>
-			<array/>
+			<array>
+				<string>tencent1102093062</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>wx2ffd4bce6eb8488d</string>
+			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>

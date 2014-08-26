@@ -17,6 +17,7 @@
 @property(nonatomic,strong) UILabel *likeLabel;
 @property(nonatomic,strong) UIImageView *likeView;
 @property(nonatomic,strong) UIImageView *favView;
+@property(nonatomic,strong) UIImageView *shareView;
 @property(nonatomic,assign) int articleId;
 @property(nonatomic,assign) bool favor;
 @property(nonatomic,assign) bool like;
