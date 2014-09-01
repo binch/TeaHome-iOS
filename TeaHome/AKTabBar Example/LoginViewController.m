@@ -157,14 +157,19 @@
 {
     [super viewDidLoad];
     
+    if (TeaHomeAppDelegate.login_from_home == NO) {
+        self.hidesBottomBarWhenPushed = YES;
+    }
+    
     self.oauth = [[TencentOAuth alloc] initWithAppId:@"1102093062" andDelegate:self];
     self.oauth.redirectURI = @"teahome://login/";
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(analysisResponse:) name:kGetUserInfoResponse object:self.oauth];
 
     self.title = @"登录";
     self.view.backgroundColor = [UIColor whiteColor];
-    [self.navigationItem setHidesBackButton:YES];
+    //[self.navigationItem setHidesBackButton:YES];
     
     self.usernameField.placeholder = @"字母，数字和下划线";
     self.passwordField.secureTextEntry = YES;
@@ -232,6 +237,7 @@
             [[NSUserDefaults standardUserDefaults]  setObject:TeaHomeAppDelegate.username forKey:Username];
             [[NSUserDefaults standardUserDefaults] setObject:TeaHomeAppDelegate.password forKey:Password];
             [[NSUserDefaults standardUserDefaults] synchronize];
+            TeaHomeAppDelegate.login_from_home = NO;
             [self backAction];
         }else{
             [Utils showAlertViewWithMessage:@"登录失败，请重试."];

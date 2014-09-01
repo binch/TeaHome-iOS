@@ -7,7 +7,6 @@
 //
 
 #import "QuestionsViewController.h"
-#import "LoginViewController.h"
 #import "AnswersViewController.h"
 #import "PostThreadViewController.h"
 
@@ -78,13 +77,6 @@ static int page = 1;
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    if ([TeaHomeAppDelegate.username isEqualToString:@""]) {
-        [self.tableView headerEndRefreshing];
-        LoginViewController *lvc = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-        [self.navigationController pushViewController:lvc animated:YES];
-        return;
-    }
-    
    
 }
 

@@ -12,7 +12,7 @@
 #import "FourthViewController.h"
 #import "ShopViewController.h"
 #import "ProductViewController.h"
-#import "LoginViewController.h"
+
 #import "ProductCommentDetailViewController.h"
 #import "SimpleUserinfoViewController.h"
 #import "FourthViewShopCell.h"
@@ -139,11 +139,6 @@ static int page = 1;
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    if ([TeaHomeAppDelegate.username isEqualToString:@""]) {
-        LoginViewController *lvc = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-        [self.navigationController pushViewController:lvc animated:YES];
-    }
-    
 }
 
 #pragma mark 开始进入刷新状态

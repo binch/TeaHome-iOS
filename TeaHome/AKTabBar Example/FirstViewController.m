@@ -9,7 +9,6 @@
 
 #import "FirstViewController.h"
 #import "ArticleContentViewController.h"
-#import "LoginViewController.h"
 
 #define news_cmd @"get_articles"
 #define get_bigpictures_cmd @"get_bigpictures"
@@ -70,13 +69,7 @@ static int page = 1;
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    if ([TeaHomeAppDelegate.username isEqualToString:@""]) {
-        [self.tableView headerEndRefreshing];
-        LoginViewController *lvc = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-        [self.navigationController pushViewController:lvc animated:YES];
-        return;
-    }
-    
+
 }
 
 #pragma mark 开始进入刷新状态
@@ -336,7 +329,7 @@ static int page = 1;
     if (indexPath.row == 0) {
         return 180;
     }
-    return 120;
+    return 170;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -387,29 +380,46 @@ static int page = 1;
     NSString *title = [d objectForKey:@"name"];
     NSString *summary = [d objectForKey:@"summary"];
     NSString *imageUrl = [d objectForKey:@"pic_url"];
+    NSString *multipic = [d objectForKey:@"multipic_url"];
     
+    if ([multipic isEqualToString:@""]) {
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, 50, 100, 80)];
+        imageView.backgroundColor = [UIColor clearColor];
+        [imageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"image_loading"]];
+        int desc_x = 10;
+        int desc_width = 180;
+        if ([imageUrl isEqualToString:@" "]) {
+            desc_x = 10;
+            desc_width = 290;
+        } else {
+            [cell addSubview:imageView];
+        }
+        
+        UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(desc_x, 45, desc_width, 85)];
+        descLabel.backgroundColor = [UIColor clearColor];
+        descLabel.numberOfLines = 0;
+        descLabel.text = [NSString stringWithFormat:@"%@",summary];
+        descLabel.font = [UIFont systemFontOfSize:13];
+        descLabel.textColor = [UIColor grayColor];
+        [cell addSubview:descLabel];
+    } else {
+        int image_x = 10;
+        for (NSString *name in [multipic componentsSeparatedByString:@","]) {
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(image_x, 70, 80, 70)];
+            imageView.backgroundColor = [UIColor clearColor];
+            [imageView sd_setImageWithURL:[NSURL URLWithString:name] placeholderImage:[UIImage imageNamed:@"image_loading"]];
+            [cell addSubview:imageView];
+            image_x += 100;
+        }
+    }
     
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 120, 90)];
-    imageView.backgroundColor = [UIColor clearColor];
-    [imageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"image_loading"]];
-    [cell addSubview:imageView];
-    
-    
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(140, 10, 170, 20)];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 15, 280, 30)];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.numberOfLines = 0;
-    titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:14];
+    titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:18];
     titleLabel.text = [NSString stringWithFormat:@"%@",title];
     titleLabel.textColor = [UIColor blackColor];
     [cell addSubview:titleLabel];
-    
-    UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(140, 35, 170, 55)];
-    descLabel.backgroundColor = [UIColor clearColor];
-    descLabel.numberOfLines = 0;
-    descLabel.text = [NSString stringWithFormat:@"%@",summary];
-    descLabel.font = [UIFont systemFontOfSize:10];
-    descLabel.textColor = [UIColor lightGrayColor];
-    [cell addSubview:descLabel];
     
     return cell;
 }

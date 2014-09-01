@@ -7,6 +7,7 @@
 //
 
 #import "PostProductEvaluateViewController.h"
+#import "LoginViewController.h"
 
 #define post_item_comment_cmd @"post_item_comment"
 
@@ -50,6 +51,13 @@
     [super viewDidLoad];
     //    self.automaticallyAdjustsScrollViewInsets = NO;
     self.hidesBottomBarWhenPushed = YES;
+    if ([TeaHomeAppDelegate.username isEqualToString:@""]) {
+
+        LoginViewController *lvc = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+        [self.navigationController pushViewController:lvc animated:YES];
+        return;
+    }
+
     
     xqPoint = -1;
     zwPoint = -1;
@@ -363,7 +371,7 @@
         [photos addObject:photo];
     }
     IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photos];
-    browser.displayActionButton = NO;
+    browser.displayActionButton = YES;
     browser.displayArrowButton = YES;
     browser.displayCounterLabel = YES;
     [self presentViewController:browser animated:YES completion:nil];

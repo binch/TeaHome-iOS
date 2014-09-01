@@ -143,7 +143,7 @@ static CGFloat ImageViewHeight = 60;
     if (section == 0) {
         return 0;
     }
-    return 30;
+    return 10;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -153,7 +153,7 @@ static CGFloat ImageViewHeight = 60;
 //        CGFloat titleHeight = [Utils heightForString:title withWidth:235 withFont:17];
         NSString *content = [NSString stringWithFormat:@"%@",[self.thread objectForKey:@"content"]];
         CGFloat contentHeight = [Utils heightForString:content withWidth:280 withFont:14];
-        NSString *images = [NSString stringWithFormat:@"images"];
+        NSString *images = [self.thread objectForKey:@"images"];
         if (![images isEqualToString:@""] && images != nil) {
             return 50 + contentHeight + 30 + ImageViewHeight + 30;
         }
@@ -177,9 +177,9 @@ static CGFloat ImageViewHeight = 60;
         UILabel * headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         headerLabel.backgroundColor = [UIColor clearColor];
         headerLabel.textColor = [Utils hexStringToColor:navigation_bar_color];
-        headerLabel.font = [UIFont boldSystemFontOfSize:18];
+        headerLabel.font = [UIFont boldSystemFontOfSize:14];
         headerLabel.frame = CGRectMake(20, 0.0, 280, 30);
-        headerLabel.text = @"评论";
+        //headerLabel.text = @"评论";
         
         [customView addSubview:headerLabel];
         
@@ -420,7 +420,7 @@ static CGFloat ImageViewHeight = 60;
             y += 80;
         }
         
-        y += 5;
+        y += 10;
         
         int icon_size = 20;
         
@@ -618,7 +618,7 @@ static CGFloat ImageViewHeight = 60;
     y += 55;
     
     //回复正文
-    CGFloat height = [Utils heightForString:[dic objectForKey:@"content"] withWidth:280 withFont:14];
+    CGFloat height = [Utils heightForString:[dic objectForKey:@"content"] withWidth:280 withFont:15];
     UILabel *contenLabel = [[UILabel alloc] initWithFrame:CGRectMake(65, y, 250, height)];
     contenLabel.backgroundColor = [UIColor clearColor];
     contenLabel.numberOfLines = 0;
@@ -673,7 +673,7 @@ static CGFloat ImageViewHeight = 60;
                 [photos addObject:photo];
             }
             IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photos];
-            browser.displayActionButton = NO;
+            browser.displayActionButton = YES;
             browser.displayArrowButton = YES;
             browser.displayCounterLabel = YES;
             [self presentViewController:browser animated:YES completion:nil];
@@ -688,7 +688,7 @@ static CGFloat ImageViewHeight = 60;
                 [photos addObject:photo];
             }
             IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photos];
-            browser.displayActionButton = NO;
+            browser.displayActionButton = YES;
             browser.displayArrowButton = YES;
             browser.displayCounterLabel = YES;
             [self presentViewController:browser animated:YES completion:nil];

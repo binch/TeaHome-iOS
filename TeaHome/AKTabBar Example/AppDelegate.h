@@ -48,6 +48,8 @@ typedef NS_ENUM(int, kPayMethod) {
 @property(nonatomic,strong) NSString *password;
 @property(nonatomic,strong) NSString *deviceId;
 
+@property(nonatomic,assign) bool login_from_home;
+
 @property(nonatomic,strong) NSMutableDictionary *userSettings;
 @property(nonatomic,strong) NSMutableDictionary *cartsDic;
 

@@ -258,7 +258,7 @@
             [photos addObject:photo];
         }
         IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photos];
-        browser.displayActionButton = NO;
+        browser.displayActionButton = YES;
         browser.displayArrowButton = YES;
         browser.displayCounterLabel = YES;
         [self presentViewController:browser animated:YES completion:nil];

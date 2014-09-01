@@ -36,6 +36,8 @@
       UnDefined,Password,
       nil]];
     
+    self.login_from_home = NO;
+    
     self.username = [[[NSUserDefaults standardUserDefaults] objectForKey:Username] isEqualToString:UnDefined]
     ? @""
     : [[NSUserDefaults standardUserDefaults] objectForKey:Username];
@@ -104,9 +106,11 @@
     
 //    FifthViewController *fifvc = [[FifthViewController alloc] init];
 //    UINavigationController *nav5 = [[UINavigationController alloc] initWithRootViewController:fifvc];
+    UINavigationController *nav5;
 
     HomeViewController *fifvc = [[HomeViewController alloc] init];
-    UINavigationController *nav5 = [[UINavigationController alloc] initWithRootViewController:fifvc];
+    nav5 = [[UINavigationController alloc] initWithRootViewController:fifvc];
+
     
     [_tabBarController setViewControllers:[NSMutableArray arrayWithObjects:
                                                navigationController,

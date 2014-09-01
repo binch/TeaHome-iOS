@@ -62,12 +62,6 @@ static int page = 1;
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    if ([TeaHomeAppDelegate.username isEqualToString:@""]) {
-        [self.tableView headerEndRefreshing];
-        LoginViewController *lvc = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-        [self.navigationController pushViewController:lvc animated:YES];
-        return;
-    }
 }
 
 -(void)handleNotification:(NSNotification *)note
@@ -83,6 +77,12 @@ static int page = 1;
 
 -(void)postThreadAction:(id)sender
 {
+    if ([TeaHomeAppDelegate.username isEqualToString:@""]) {
+        LoginViewController *lvc = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+        [self.navigationController pushViewController:lvc animated:YES];
+        return;
+    }
+    
     PostThreadViewController *ptvc = [[PostThreadViewController alloc] init];
     ptvc.style = kPostStyleThread;
     ptvc.postId = self.bid;
@@ -331,10 +331,10 @@ static int page = 1;
     }
     NSString *images = [dic objectForKey:@"images"];
     if (![images isEqualToString:@""] && images != nil) {
-        return 120;
+        return 135;
     }
     //return 70 + height;
-    return 75;
+    return 90;
 
 }
 
@@ -415,12 +415,12 @@ static int page = 1;
     contentLabel.text = content;
     contentLabel.numberOfLines = 2;
     contentLabel.backgroundColor = [UIColor clearColor];
-    contentLabel.font = [UIFont systemFontOfSize:14];
+    contentLabel.font = [UIFont fontWithName:@"TrebuchetMS-Bold" size:14];
     contentLabel.textColor = [UIColor blackColor];
     [contentLabel sizeToFit];
     [cell addSubview:contentLabel];
     
-    CGFloat y = 45;
+    CGFloat y = 55;
     
     CGFloat ImageViewHeight = 50;
     
@@ -448,10 +448,10 @@ static int page = 1;
         }
         imagesView.contentSize = CGSizeMake(imagesViewx, ImageViewHeight);
         y += ImageViewHeight;
-        y = 98;
+        y = 113;
     } else {
         //y += ImageViewHeight;
-        y = 50;
+        y = 65;
     }
     
 //    y += 5;
@@ -470,13 +470,6 @@ static int page = 1;
     userLabel.font = [UIFont systemFontOfSize:12];
     userLabel.textColor = [UIColor grayColor];
     [cell addSubview:userLabel];
-    
-    UILabel *gradeLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 30, 110, 15)];
-    gradeLabel.text = grade;
-    gradeLabel.backgroundColor = [UIColor clearColor];
-    gradeLabel.font = [UIFont systemFontOfSize:12];
-    gradeLabel.textColor = [UIColor grayColor];
-    //[cell addSubview:gradeLabel];
     
     UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, y, 70,15)];
     timeLabel.text = delta;
@@ -519,7 +512,7 @@ static int page = 1;
         [photos addObject:photo];
     }
     IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photos];
-    browser.displayActionButton = NO;
+    browser.displayActionButton = YES;
     browser.displayArrowButton = YES;
     browser.displayCounterLabel = YES;
     [self presentViewController:browser animated:YES completion:nil];

@@ -9,6 +9,7 @@
 #import "CartDetailViewController.h"
 #import "CartItem.h"
 #import "OrderDetailViewController.h"
+#import "LoginViewController.h"
 
 #define new_order_cmd @"new_order"
 @interface CartDetailViewController ()
@@ -178,6 +179,14 @@
 
 -(void)payAction:(id)sender
 {
+    
+    if ([TeaHomeAppDelegate.username isEqualToString:@""]) {
+        TeaHomeAppDelegate.login_from_home = YES;
+        LoginViewController *lvc = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+        [self.navigationController pushViewController:lvc animated:YES];
+        return;
+    }
+    
     [[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
     if ([self.nameTF.text isEqualToString:@""]) {
         [Utils saveDataToUserDefaults:NameSetting withValue:UnDefined];

@@ -65,7 +65,6 @@ typedef NS_ENUM(int, kLabelTag) {
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-    
     self.view.backgroundColor = [UIColor whiteColor];
     
 //    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"退出登录" style:UIBarButtonItemStyleBordered target:self action:@selector(logoutAction:)];
@@ -78,12 +77,20 @@ typedef NS_ENUM(int, kLabelTag) {
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [TeaHomeAppDelegate setItemBageNumberView];
+    if (TeaHomeAppDelegate.login_from_home == YES) {
+        TeaHomeAppDelegate.login_from_home = NO;
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    
     if ([TeaHomeAppDelegate.username isEqualToString:@""]) {
+        TeaHomeAppDelegate.login_from_home = YES;
         LoginViewController *lvc = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
         [self.navigationController pushViewController:lvc animated:YES];
         return;
     }
+    
+    [TeaHomeAppDelegate setItemBageNumberView];
+
     
     if (TeaHomeAppDelegate.networkIsReachable == NO) {
         [Utils showAlertViewWithMessage:@"无网络,请稍后再试."];

@@ -9,6 +9,7 @@
 
 #import "PostThreadViewController.h"
 #import "SNPopupView+UsingPrivateMethod.h"
+#import "LoginViewController.h"
 #import <ImageIO/ImageIO.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
@@ -42,6 +43,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     self.hidesBottomBarWhenPushed=YES;
+
     
     if (self.style == kPostStyleQuestion) {
         UIImage *titleBackImage = [UIImage imageNamed:@"ask_title"];
@@ -416,7 +418,7 @@
     }
     
     IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:photos];
-    browser.displayActionButton = NO;
+    browser.displayActionButton = YES;
     browser.displayArrowButton = YES;
     browser.displayCounterLabel = YES;
     

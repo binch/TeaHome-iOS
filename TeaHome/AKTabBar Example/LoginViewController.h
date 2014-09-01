@@ -47,7 +47,6 @@
 
 @property(nonatomic,strong) IBOutlet UITextField *usernameField;
 @property(nonatomic,strong) IBOutlet UITextField *passwordField;
-
 @property(nonatomic,strong) IBOutlet UIButton *loginBtn;
 -(IBAction)loginAction:(id)sender;
 
